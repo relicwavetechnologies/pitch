@@ -296,8 +296,8 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
   /* ── RBAC image taller since it's portrait ── */
   #s-rbac .ss-body img { height:360px !important; max-height:360px !important; }
 
-  /* ── Lark screenshots ── */
-  #s-lark .ss-body img { height:200px !important; max-height:200px !important; }
+  /* ── Lark screenshots — no height cap, show full image ── */
+  #s-lark .ss-body img { height:auto !important; max-height:none !important; object-fit:unset !important; }
 
   /* ── Persona cards ── */
   .persona-card { padding:24px 20px !important; }
@@ -651,6 +651,15 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
             <div>✓ Manage FTE & contract from one dashboard</div>
           </div>
         </div>
+        <div style="padding:16px 18px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.2);border-radius:12px">
+          <div style="font-size:10px;font-weight:800;color:var(--cyan);letter-spacing:1.5px;margin-bottom:10px">RULE ENGINE</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
+            <div>✓ Automate stage transitions on score thresholds</div>
+            <div>✓ Route candidates to the right reviewer automatically</div>
+            <div>✓ Trigger notifications & tasks per stage</div>
+            <div>✓ Built for multi-member hiring teams</div>
+          </div>
+        </div>
         <div style="padding:12px 16px;background:var(--p-light);border:1px solid rgba(79,70,229,0.2);border-radius:10px;font-size:13px;color:var(--text2);line-height:1.6">
           <strong style="color:var(--p)">One dashboard</strong> — HR admin sees and manages all open positions, all job types, all candidates in one place.
         </div>
@@ -925,7 +934,7 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
             <div class="ss-dot" style="background:#f59e0b"></div>
             <div class="ss-dot" style="background:#10b981"></div>
           </div>
-          <div class="ss-body"><img src="assets/ss-lark-1.png" alt="Lark AI Agent" style="width:100%;display:block;height:220px;object-fit:cover;object-position:top;"></div>
+          <div class="ss-body"><img src="assets/ss-lark-1.png" alt="Lark AI Agent" style="width:100%;display:block;"></div>
         </div>
       </div>
       <div>
@@ -936,7 +945,7 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
             <div class="ss-dot" style="background:#f59e0b"></div>
             <div class="ss-dot" style="background:#10b981"></div>
           </div>
-          <div class="ss-body"><img src="assets/ss-lark-2.png" alt="Invoice Management" style="width:100%;display:block;height:220px;object-fit:cover;object-position:top;"></div>
+          <div class="ss-body"><img src="assets/ss-lark-2.png" alt="Invoice Management" style="width:100%;display:block;"></div>
         </div>
       </div>
     </div>
