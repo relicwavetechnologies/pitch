@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/hrm8-pitch.html" }
+  ]
+}
