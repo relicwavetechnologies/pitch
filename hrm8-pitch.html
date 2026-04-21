@@ -217,6 +217,126 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
 
 /* ── Step list ── */
 .step-item { display:flex; gap:14px; align-items:flex-start; padding:14px 18px; background:var(--bg); border:1px solid rgba(0,0,0,0.06); border-radius:14px; border-left:3px solid var(--p); box-shadow:0 1px 6px rgba(15,23,42,0.04); }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — TABLET + MOBILE ≤1024px
+   Single breakpoint covers all phones, large phones,
+   and tablets up to iPad Pro.
+═══════════════════════════════════════════════════════ */
+@media (max-width:1024px) {
+
+  /* ── Global layout ── */
+  section {
+    padding:52px 24px 40px !important;
+    min-height:100svh;
+    overflow-y:visible;
+    justify-content:flex-start;
+  }
+  #s0 { justify-content:center !important; }
+  #s2, #s4, #s-lark, #s-rbac { min-height:unset !important; padding-bottom:52px !important; }
+
+  /* ── Hide desktop chrome ── */
+  .nav-dots, .key-hint, .sec-tag { display:none !important; }
+  .float { animation:none !important; }
+  #s0 .float { display:none !important; }
+
+  /* ── Typography ── */
+  h1 { font-size:40px !important; letter-spacing:-1.5px !important; line-height:1.08 !important; }
+  h2 { font-size:30px !important; letter-spacing:-0.8px !important; line-height:1.12 !important; }
+  h3 { font-size:16px !important; }
+  .sub { font-size:15px !important; margin-top:10px !important; line-height:1.65 !important; }
+
+  /* Inline large font overrides */
+  *[style*="font-size:64px"], *[style*="font-size:66px"] { font-size:40px !important; letter-spacing:-1.5px !important; }
+  *[style*="font-size:52px"] { font-size:34px !important; letter-spacing:-1px !important; }
+  *[style*="font-size:48px"] { font-size:30px !important; }
+  *[style*="font-size:44px"] { font-size:28px !important; }
+  *[style*="font-size:40px"] { font-size:26px !important; }
+  *[style*="font-size:38px"] { font-size:24px !important; }
+
+  /* ── Collapse ALL grids → single column ── */
+  div[style*="grid-template-columns"] { grid-template-columns:1fr !important; }
+  div[style*="display:grid"] { grid-template-columns:1fr !important; }
+  .grid-2, .grid-3 { grid-template-columns:1fr !important; }
+
+  /* ── Gap normalisation ── */
+  div[style*="gap:64px"] { gap:20px !important; }
+  div[style*="gap:56px"] { gap:18px !important; }
+  div[style*="gap:40px"] { gap:16px !important; }
+  div[style*="gap:32px"] { gap:14px !important; }
+  div[style*="gap:28px"] { gap:12px !important; }
+  div[style*="gap:24px"] { gap:12px !important; }
+  #s1 div[style*="gap:0 56px"] { gap:10px 0 !important; }
+
+  /* ── Max-width containers → full width ── */
+  div[style*="max-width:1200px"],
+  div[style*="max-width:1100px"],
+  div[style*="max-width:940px"],
+  div[style*="max-width:880px"],
+  div[style*="max-width:860px"],
+  div[style*="max-width:520px"] { max-width:100% !important; width:100% !important; }
+
+  /* ── Pipeline stages: vertical stack ── */
+  .pipeline-flow { flex-direction:column !important; gap:6px !important; }
+  .pipe-step {
+    clip-path:none !important;
+    border-radius:12px !important;
+    padding:14px 16px !important;
+  }
+  .pipe-step:first-child, .pipe-step:last-child { clip-path:none !important; }
+
+  /* ── Capabilities grid in pipeline slide: 2-col ── */
+  #s4 div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr 1fr !important; }
+
+  /* ── Screenshots ── */
+  .ss-frame { max-width:100% !important; }
+  .ss-body img { height:auto !important; max-height:280px !important; object-fit:cover !important; }
+  .ss-bar span { font-size:10px !important; }
+
+  /* ── RBAC image taller since it's portrait ── */
+  #s-rbac .ss-body img { height:360px !important; max-height:360px !important; }
+
+  /* ── Lark screenshots ── */
+  #s-lark .ss-body img { height:200px !important; max-height:200px !important; }
+
+  /* ── Persona cards ── */
+  .persona-card { padding:24px 20px !important; }
+  .persona-icon { width:44px !important; height:44px !important; }
+
+  /* ── Step items ── */
+  .step-item { padding:12px 14px !important; }
+
+  /* ── Cards ── */
+  .card { padding:18px !important; }
+
+  /* ── Pill tags ── */
+  .pill { font-size:11px !important; padding:4px 12px !important; }
+
+  /* ── Inline paddings ── */
+  div[style*="padding:16px 18px"],
+  div[style*="padding:22px 24px"] { padding:14px 16px !important; }
+
+  /* ── Agenda highlighted item left pad ── */
+  .agenda-item[style*="border-left"] { padding-left:10px !important; }
+
+  /* ── Mock rows ── */
+  .mock-row { padding:10px 14px !important; gap:10px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — SMALL PHONE ≤480px
+═══════════════════════════════════════════════════════ */
+@media (max-width:480px) {
+  section { padding:44px 18px 36px !important; }
+  h1 { font-size:32px !important; letter-spacing:-1px !important; }
+  h2 { font-size:24px !important; letter-spacing:-0.5px !important; }
+  .sub { font-size:14px !important; }
+  *[style*="font-size:52px"], *[style*="font-size:48px"] { font-size:26px !important; }
+  *[style*="font-size:40px"], *[style*="font-size:38px"] { font-size:22px !important; }
+  .persona-card { padding:18px 14px !important; }
+  .card { padding:14px !important; }
+  #s4 div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
+}
 </style>
 </head>
 <body>
