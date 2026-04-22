@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HRM8 · Vendor ATS — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#4f46e5;--p2:#6366f1;--p3:#818cf8;
+  --cyan:#06b6d4;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--purple:#8b5cf6;
+  --text:#0f172a;--text2:#334155;--dim:#64748b;--muted:#94a3b8;
+  --border:#e2e8f0;--bg:#f1f2f9;--card:#fff;
+  --radius:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4f46e5 65%,#6366f1 100%);
+  padding:72px 48px 64px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 800px 400px at 50% 120%,rgba(99,102,241,0.4) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;
+  top:-120px;right:-80px;
+  width:420px;height:420px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(129,140,248,0.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.2);
+  backdrop-filter:blur(8px);
+  color:#c7d2fe;font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;
+  padding:6px 16px;border-radius:100px;margin-bottom:28px;
+}
+.hero-eyebrow span{width:6px;height:6px;border-radius:50%;background:#818cf8;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.hero h1{
+  font-size:clamp(32px,5vw,52px);font-weight:800;color:#fff;
+  line-height:1.1;letter-spacing:-1.5px;margin-bottom:18px;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(90deg,#a5b4fc,#67e8f9);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:17px;color:rgba(255,255,255,0.72);font-weight:400;
+  max-width:600px;margin:0 auto 36px;line-height:1.7;
+}
+.hero-meta{
+  display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;
+  font-size:13px;color:rgba(255,255,255,0.55);
+}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta svg{opacity:.7}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);
+  color:rgba(255,255,255,0.8);font-size:12px;font-weight:500;
+  padding:4px 12px;border-radius:100px;
+}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:1160px;margin:0 auto;padding:56px 32px 80px;}
+
+/* ── SECTION LABEL ── */
+.section-label{
+  display:flex;align-items:center;gap:10px;margin-bottom:28px;
+}
+.section-label h2{font-size:15px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── FLOW BANNER ── */
+.flow-banner{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px 32px;margin-bottom:48px;
+}
+.flow-banner-title{font-size:13px;font-weight:600;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;margin-bottom:20px}
+.flow-steps{
+  display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px;
+}
+.flow-step{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  min-width:120px;
+  position:relative;
+}
+.flow-step:not(:last-child)::after{
+  content:'';position:absolute;top:20px;left:calc(50% + 20px);
+  width:calc(100% - 40px);height:2px;
+  background:linear-gradient(90deg,var(--p),rgba(79,70,229,0.2));
+  z-index:0;
+}
+.fs-icon{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;flex-shrink:0;
+}
+.fs-icon.done{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.fs-icon.current{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 4px 16px rgba(79,70,229,.4)}
+.fs-icon.dim{background:#f1f5f9;color:var(--muted)}
+.fs-label{font-size:11px;font-weight:600;color:var(--dim);text-align:center;line-height:1.3;white-space:nowrap}
+.fs-label .fs-page{font-size:10px;color:var(--muted);font-weight:400}
+
+/* ── CARDS GRID ── */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:24px;
+  margin-bottom:56px;
+}
+.demo-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  text-decoration:none;
+  color:var(--text);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.demo-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(79,70,229,.12);
+  border-color:rgba(79,70,229,.3);
+}
+.demo-card:hover .card-arrow{transform:translateX(4px)}
+.card-accent{height:4px;background:linear-gradient(90deg,var(--p),var(--p2))}
+.card-accent.green{background:linear-gradient(90deg,#10b981,#06b6d4)}
+.card-accent.amber{background:linear-gradient(90deg,#f59e0b,#f97316)}
+.card-accent.purple{background:linear-gradient(90deg,#8b5cf6,#6366f1)}
+.card-accent.cyan{background:linear-gradient(90deg,#06b6d4,#3b82f6)}
+
+.card-body{padding:24px;flex:1;display:flex;flex-direction:column;gap:12px}
+.card-icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.card-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-icon.indigo{background:rgba(79,70,229,.1);color:var(--p)}
+.card-icon.green{background:rgba(16,185,129,.1);color:#10b981}
+.card-icon.amber{background:rgba(245,158,11,.1);color:#f59e0b}
+.card-icon.purple{background:rgba(139,92,246,.1);color:#8b5cf6}
+.card-icon.cyan{background:rgba(6,182,212,.1);color:#06b6d4}
+
+.card-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.card-title{font-size:17px;font-weight:700;color:var(--text);line-height:1.3}
+.card-desc{font-size:13px;color:var(--dim);line-height:1.6;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.ctag{
+  font-size:11px;font-weight:500;padding:3px 9px;border-radius:100px;
+  background:#f1f5f9;color:var(--text2);
+}
+.card-footer{
+  padding:14px 24px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:#fafafa;
+}
+.card-cta{font-size:13px;font-weight:600;color:var(--p)}
+.card-arrow{
+  width:28px;height:28px;border-radius:8px;
+  background:rgba(79,70,229,.08);color:var(--p);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s;
+}
+
+/* ── NEW BADGE ── */
+.new-badge{
+  position:absolute;top:16px;right:16px;
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;font-size:10px;font-weight:700;letter-spacing:.6px;
+  padding:3px 8px;border-radius:100px;text-transform:uppercase;
+}
+
+/* ── HIGHLIGHT / LIFECYCLE CARD ── */
+.lifecycle-card{
+  background:linear-gradient(135deg,#f8f7ff,#eef2ff);
+  border:1px solid rgba(79,70,229,.2);
+  border-radius:var(--radius);
+  padding:32px;
+  margin-bottom:56px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  align-items:center;
+}
+@media(max-width:740px){.lifecycle-card{grid-template-columns:1fr;gap:24px}}
+.lc-left h3{font-size:20px;font-weight:700;color:var(--text);margin-bottom:10px}
+.lc-left p{font-size:14px;color:var(--dim);line-height:1.7}
+.lc-right{display:flex;flex-direction:column;gap:10px}
+.lc-step{
+  display:flex;align-items:center;gap:12px;
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;
+}
+.lc-step-num{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p),var(--p2));
+  color:#fff;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.lc-step-text{font-size:13px;font-weight:500;color:var(--text2)}
+.lc-step-badge{
+  margin-left:auto;font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:100px;
+}
+.lc-step-badge.green{background:rgba(16,185,129,.12);color:#059669}
+.lc-step-badge.blue{background:rgba(59,130,246,.12);color:#2563eb}
+.lc-step-badge.amber{background:rgba(245,158,11,.12);color:#b45309}
+
+/* ── STRYKER BANNER ── */
+.client-strip{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 28px;
+  display:flex;align-items:center;gap:20px;
+  margin-bottom:48px;
+}
+.str-logo{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  color:#fff;font-size:18px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.str-info{flex:1}
+.str-info h3{font-size:15px;font-weight:700;color:var(--text)}
+.str-info p{font-size:13px;color:var(--dim);margin-top:2px}
+.str-pills{display:flex;gap:8px;flex-wrap:wrap}
+.str-pill{
+  font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;
+}
+.str-pill.indigo{background:rgba(79,70,229,.1);color:var(--p)}
+.str-pill.green{background:rgba(16,185,129,.1);color:#059669}
+.str-pill.amber{background:rgba(245,158,11,.1);color:#b45309}
+
+/* ── FOOTER ── */
+.demo-footer{
+  text-align:center;padding:40px 32px;
+  border-top:1px solid var(--border);
+  background:#fff;
+}
+.demo-footer p{font-size:13px;color:var(--muted)}
+.demo-footer strong{color:var(--text2)}
+.footer-nav{
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  flex-wrap:wrap;margin-top:16px;
+}
+.footer-nav a{font-size:13px;color:var(--p);font-weight:500;text-decoration:none}
+.footer-nav a:hover{text-decoration:underline}
+.footer-divider{color:var(--border)}
+
+/* ── KEYBOARD HINT ── */
+.keyboard-hint{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.6);font-size:12px;font-weight:400;
+  padding:5px 14px;border-radius:100px;margin-top:16px;
+}
+kbd{
+  background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);
+  padding:1px 6px;border-radius:4px;font-size:11px;font-family:monospace;
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span></span>
+    Interactive Demo · Confidential
+  </div>
+  <h1>HRM8 <em>Vendor ATS</em><br>Vendor Portal</h1>
+  <p class="hero-sub">
+    A vendor-first applicant tracking system built for enterprise staffing.
+    Manage invitations, submit candidates, track timesheets, and generate invoices — all in one place.
+  </p>
+  <div class="hero-meta">
+    <span>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      Client: Stryker Corporation
+    </span>
+    <span>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 3H8L6 7h12l-2-4Z"/></svg>
+      Logged in: Vendor #0047
+    </span>
+    <span>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      6 screens · Wireframe only
+    </span>
+  </div>
+  <div style="margin-top:20px">
+    <span class="hero-badge">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Mock data only — no backend
+    </span>
+  </div>
+</section>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- Stryker context strip -->
+  <div class="client-strip">
+    <div class="str-logo">STR</div>
+    <div class="str-info">
+      <h3>Stryker Corporation — Vendor Portal Demo</h3>
+      <p>This demo shows the experience for a staffing vendor (Vendor #0047) working with Stryker's HR team to source, place, and bill contract &amp; FTE talent.</p>
+    </div>
+    <div class="str-pills">
+      <span class="str-pill indigo">Contract Hiring</span>
+      <span class="str-pill indigo">FTE Sourcing</span>
+      <span class="str-pill green">Timesheet Billing</span>
+      <span class="str-pill amber">Invoice Management</span>
+    </div>
+  </div>
+
+  <!-- Journey flow banner -->
+  <div class="section-label"><h2>Vendor Journey</h2></div>
+  <div class="flow-banner">
+    <div class="flow-banner-title">End-to-end flow — click any screen below to explore</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="fs-icon done">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="fs-label">Onboard<div class="fs-page">vendor-onboarding</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon done">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="fs-label">Dashboard<div class="fs-page">vendor-dashboard</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon done">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        </div>
+        <div class="fs-label">Job Invitations<div class="fs-page">jobs-list</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon done">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <div class="fs-label">Submit CV<div class="fs-page">job-detail</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon current">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+        </div>
+        <div class="fs-label">Timesheets<div class="fs-page">timesheet</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="fs-icon dim">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <div class="fs-label">Invoices<div class="fs-page">invoices</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lifecycle highlight -->
+  <div class="section-label"><h2>Billing Lifecycle</h2></div>
+  <div class="lifecycle-card">
+    <div class="lc-left">
+      <h3>SOW → Invoice → Payment</h3>
+      <p>
+        Once a consultant is hired, the post-placement billing lifecycle kicks in.
+        Vendors submit monthly timesheets, Stryker's hiring manager reviews and approves hours,
+        the system locks the approved record, and generates a GST-compliant invoice.
+        Payment follows Net 60–90 day terms via bank transfer.
+      </p>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <a href="timesheet.html" style="display:inline-flex;align-items:center;gap:6px;background:var(--p);color:#fff;font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;text-decoration:none">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+          View Timesheet Screen
+        </a>
+        <a href="invoices.html" style="display:inline-flex;align-items:center;gap:6px;background:rgba(79,70,229,.1);color:var(--p);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;text-decoration:none">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          View Invoice Screen
+        </a>
+      </div>
+    </div>
+    <div class="lc-right">
+      <div class="lc-step">
+        <div class="lc-step-num">1</div>
+        <div class="lc-step-text">SOW & PO signed — consultant joins</div>
+        <span class="lc-step-badge green">Completed</span>
+      </div>
+      <div class="lc-step">
+        <div class="lc-step-num">2</div>
+        <div class="lc-step-text">Vendor submits monthly timesheet</div>
+        <span class="lc-step-badge blue">Vendor Action</span>
+      </div>
+      <div class="lc-step">
+        <div class="lc-step-num">3</div>
+        <div class="lc-step-text">Stryker HM reviews &amp; approves hours</div>
+        <span class="lc-step-badge amber">Client Action</span>
+      </div>
+      <div class="lc-step">
+        <div class="lc-step-num">4</div>
+        <div class="lc-step-text">Approved timesheet locked → invoice generated</div>
+        <span class="lc-step-badge blue">System</span>
+      </div>
+      <div class="lc-step">
+        <div class="lc-step-num">5</div>
+        <div class="lc-step-text">Invoice sent → client approves → payment (Net 60–90)</div>
+        <span class="lc-step-badge green">CGST + SGST</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen cards -->
+  <div class="section-label"><h2>All Screens</h2></div>
+  <div class="cards-grid">
+
+    <!-- 1. Vendor Onboarding -->
+    <a href="vendor-onboarding.html" class="demo-card">
+      <div class="card-accent green"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon green">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span class="card-num">01</span>
+        </div>
+        <div class="card-title">Vendor Onboarding</div>
+        <div class="card-desc">Multi-step registration flow for new staffing partners. Covers company info, contact details, domain expertise, and document upload. Ends with unique Vendor ID assignment.</div>
+        <div class="card-tags">
+          <span class="ctag">4-step wizard</span>
+          <span class="ctag">GST upload</span>
+          <span class="ctag">Vendor #0047</span>
+          <span class="ctag">Success state</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">vendor-onboarding.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 2. Vendor Dashboard -->
+    <a href="vendor-dashboard.html" class="demo-card">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon indigo">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <span class="card-num">02</span>
+        </div>
+        <div class="card-title">Vendor Dashboard</div>
+        <div class="card-desc">Home screen for Vendor #0047. Shows hero stats banner, quick-action cards, candidate submission pipeline, contract status tracker, and upcoming activity feed.</div>
+        <div class="card-tags">
+          <span class="ctag">Pipeline stats</span>
+          <span class="ctag">Contract status</span>
+          <span class="ctag">Donut chart</span>
+          <span class="ctag">Activity feed</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">vendor-dashboard.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 3. Job Invitations -->
+    <a href="jobs-list.html" class="demo-card">
+      <div class="card-accent amber"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon amber">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          </div>
+          <span class="card-num">03</span>
+        </div>
+        <div class="card-title">Job Invitations</div>
+        <div class="card-desc">Kanban-style card grid of all job invitations received from Stryker. Shows urgency, CV slots used, submission deadline, duplicate check warnings, and per-job progress bars.</div>
+        <div class="card-tags">
+          <span class="ctag">Urgent flag</span>
+          <span class="ctag">CV slots</span>
+          <span class="ctag">Duplicate check</span>
+          <span class="ctag">Closed state</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">jobs-list.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 4. Job Detail + CV Submit -->
+    <a href="job-detail.html" class="demo-card">
+      <div class="card-accent cyan"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon cyan">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+          </div>
+          <span class="card-num">04</span>
+        </div>
+        <div class="card-title">Job Detail + CV Submit</div>
+        <div class="card-desc">Split-panel view: full job description on the left, sticky CV submission form on the right. Shows CV auto-fill from document upload, duplicate detection alert, and submission slot tracker.</div>
+        <div class="card-tags">
+          <span class="ctag">Auto-fill form</span>
+          <span class="ctag">Dup. detection</span>
+          <span class="ctag">Skills chips</span>
+          <span class="ctag">Slot tracker</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">job-detail.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 5. Timesheets -->
+    <a href="timesheet.html" class="demo-card">
+      <div class="card-accent purple"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon purple">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+          </div>
+          <span class="card-num">05</span>
+        </div>
+        <div class="card-title">Timesheet Management</div>
+        <div class="card-desc">Monthly timesheet submission and client-approval workflow. Day-by-day hour grid, vendor-submitted vs Stryker-approved comparison table, OT cap enforcement, reject with reason, and invoice generation trigger.</div>
+        <div class="card-tags">
+          <span class="ctag">Week grid</span>
+          <span class="ctag">HM approval</span>
+          <span class="ctag">OT cap</span>
+          <span class="ctag">Hour comparison</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">timesheet.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 6. Invoices -->
+    <a href="invoices.html" class="demo-card">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-icon-row">
+          <div class="card-icon indigo">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          </div>
+          <span class="card-num">06</span>
+        </div>
+        <div class="card-title">Invoice Management</div>
+        <div class="card-desc">Full invoice lifecycle from Draft to Paid. Split layout with invoice table and sticky detail panel. Shows GST breakdown (CGST + SGST), Net 60 payment terms, overdue alerts, and a 6-step invoice timeline.</div>
+        <div class="card-tags">
+          <span class="ctag">GST inclusive</span>
+          <span class="ctag">Net 60–90</span>
+          <span class="ctag">Overdue alert</span>
+          <span class="ctag">₹38.4L FY</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-cta">invoices.html</span>
+        <span class="card-arrow">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Key features section -->
+  <div class="section-label"><h2>Key Features Demonstrated</h2></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:56px">
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(16,185,129,.1);color:#10b981;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Duplicate CV Check</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">First-come-first-served candidate ownership. System flags if another vendor already submitted the same candidate.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(6,182,212,.1);color:#06b6d4;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">CV Auto-Fill</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">Upload a resume and the system auto-populates name, contact, experience, location, and skills from the document.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,.1);color:#8b5cf6;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8l4 3-4 3V8ZM1 16l5 4 3-4"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Configurable Pipeline</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">CV Review → Interview R1 → R2 → Offer → Hired. Candidate-self-apply stages removed. Vendor-managed flow.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,.1);color:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Timesheet Approval</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">Day-by-day hours grid with vendor vs client comparison. Stryker HM approves/rejects with comments. OT cap enforced.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(79,70,229,.1);color:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">GST-Compliant Invoicing</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">Auto-generated invoices from approved timesheets. CGST 9% + SGST 9% breakdown. Net 60–90 day payment terms.</div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;gap:14px;align-items:flex-start">
+      <div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,.1);color:#3b82f6;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Contract Lifecycle Tracker</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">Per-consultant SOW → PO → Joined → Timesheet → Invoice → Paid progress visualization on the dashboard.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="demo-footer">
+  <p><strong>HRM8 Vendor ATS Demo</strong> — Prepared for Stryker Corporation · Confidential &amp; Proprietary</p>
+  <p style="margin-top:6px">All data is mock/placeholder only. No backend or logic implemented.</p>
+  <div class="footer-nav">
+    <a href="vendor-onboarding.html">Onboarding</a>
+    <span class="footer-divider">·</span>
+    <a href="vendor-dashboard.html">Dashboard</a>
+    <span class="footer-divider">·</span>
+    <a href="jobs-list.html">Job Invitations</a>
+    <span class="footer-divider">·</span>
+    <a href="job-detail.html">Job Detail</a>
+    <span class="footer-divider">·</span>
+    <a href="timesheet.html">Timesheets</a>
+    <span class="footer-divider">·</span>
+    <a href="invoices.html">Invoices</a>
+  </div>
+</footer>
+
+</body>
+</html>

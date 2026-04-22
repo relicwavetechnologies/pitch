@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM8 Vendor Portal — Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root {
+  --bg:#f4f5fb; --card:#ffffff; --sidebar:#ffffff;
+  --p:#4f46e5; --p-light:rgba(79,70,229,0.08); --p-mid:rgba(79,70,229,0.15); --p2:#6366f1;
+  --blue:#3b82f6; --cyan:#06b6d4; --green:#10b981; --amber:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  --text:#0f172a; --text2:#334155; --dim:#64748b; --muted:#94a3b8;
+  --border:#e2e8f0; --border-mid:#cbd5e1;
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow:0 4px 12px rgba(15,23,42,0.07),0 1px 3px rgba(15,23,42,0.04);
+  --sidebar-w:240px; --header-h:60px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.5px;}
+.logo-text span{color:var(--p);}
+.vendor-chip{margin:12px 12px 4px;padding:10px 12px;background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(6,182,212,0.03));border:1px solid rgba(6,182,212,0.18);border-radius:10px;}
+.vendor-id{font-size:9px;font-weight:700;color:var(--cyan);letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;}
+.vendor-name{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px;}
+.vendor-status{display:flex;align-items:center;gap:5px;margin-top:4px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.vendor-status span{font-size:10px;color:var(--dim);}
+.nav-section{padding:6px 10px;}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--dim);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.nav-item:hover{background:#f8f9ff;color:var(--text2);}
+.nav-item.active{background:var(--p-light);color:var(--p);font-weight:600;}
+.nav-item svg{flex-shrink:0;width:16px;height:16px;}
+.nav-badge{margin-left:auto;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.nav-badge.a{background:var(--amber);}
+.nav-badge.g{background:var(--green);}
+.nav-badge.u{background:#f1f5f9;color:var(--muted);border:1px solid var(--border-mid);letter-spacing:.2px;}
+.nav-item.soon{opacity:.5;pointer-events:none;cursor:default;}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+.footer-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;}
+.footer-user:hover{background:var(--bg);}
+.user-avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.user-info .user-name{font-size:12px;font-weight:600;color:var(--text);}
+.user-info .user-role{font-size:10px;color:var(--muted);}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.top-header{height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:50;}
+.breadcrumb{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.breadcrumb .sep{color:var(--border-mid);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.avatar-btn{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s;text-decoration:none;}
+.btn-primary{background:var(--p);color:#fff;}
+.btn-primary:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+.btn-outline{background:#fff;color:var(--text2);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--p);color:var(--p);}
+.btn-sm{padding:5px 13px;font-size:11.5px;}
+.btn-ghost{background:transparent;color:var(--dim);padding:6px 10px;}
+.page-content{padding:22px 26px;flex:1;}
+
+/* HERO BANNER */
+.hero-banner{background:linear-gradient(135deg,var(--p) 0%,var(--p2) 60%,#3b82f6 100%);border-radius:var(--radius);padding:22px 28px;margin-bottom:20px;color:#fff;display:flex;align-items:center;justify-content:space-between;overflow:hidden;position:relative;}
+.hero-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hero-banner::after{content:'';position:absolute;bottom:-60px;right:100px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.hero-left{position:relative;z-index:1;}
+.hero-greeting{font-size:12px;font-weight:500;opacity:0.75;margin-bottom:4px;text-transform:uppercase;letter-spacing:1.5px;}
+.hero-title{font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px;}
+.hero-sub{font-size:12.5px;opacity:0.75;line-height:1.5;}
+.hero-right{display:flex;gap:24px;position:relative;z-index:1;}
+.hero-stat{text-align:center;}
+.hero-stat .hs-val{font-size:28px;font-weight:800;line-height:1;font-family:'JetBrains Mono',monospace;}
+.hero-stat .hs-lbl{font-size:10px;opacity:0.7;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+.hero-divider{width:1px;background:rgba(255,255,255,0.2);align-self:stretch;}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:4px;transition:all 0.2s;cursor:default;}
+.stat-card:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
+.stat-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+.stat-label{font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;}
+.stat-value{font-size:22px;font-weight:700;color:var(--text);line-height:1;}
+.stat-sub{font-size:10px;color:var(--dim);}
+
+/* TWO COLUMN LAYOUT */
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:13.5px;font-weight:700;color:var(--text);}
+.card-sub{font-size:10.5px;color:var(--muted);margin-top:1px;}
+.card-body{padding:16px 18px;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;}
+thead th{padding:8px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg);}
+tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#fafbff;}
+td{padding:10px 14px;font-size:12.5px;color:var(--text2);vertical-align:middle;}
+.td-primary{font-weight:600;color:var(--text);}
+.td-mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-cv{background:rgba(148,163,184,0.15);color:var(--dim);border:1px solid rgba(148,163,184,0.2);}
+.b-r1{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.18);}
+.b-r2{background:rgba(139,92,246,0.08);color:var(--purple);border:1px solid rgba(139,92,246,0.2);}
+.b-offer{background:rgba(6,182,212,0.08);color:#0891b2;border:1px solid rgba(6,182,212,0.18);}
+.b-hired{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.2);}
+.b-rejected{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.15);}
+.b-contract{background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);}
+.b-fte{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.15);}
+
+/* MINI BARS */
+.mini-bar{height:5px;border-radius:100px;background:var(--bg);overflow:hidden;margin-top:5px;}
+.mini-bar-fill{height:100%;border-radius:100px;}
+
+/* ACTIVITY FEED */
+.activity-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start;}
+.activity-item:last-child{border-bottom:none;}
+.act-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;}
+.act-text{flex:1;}
+.act-title{font-size:12px;font-weight:500;color:var(--text2);line-height:1.4;}
+.act-time{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* ACTION LINKS */
+.alink{font-size:11px;font-weight:600;cursor:pointer;padding:3px 8px;border-radius:6px;border:none;font-family:'Poppins',sans-serif;transition:all 0.15s;}
+.alink-p{color:var(--p);background:var(--p-light);}
+.alink-g{color:#059669;background:rgba(16,185,129,0.08);}
+.alink-d{color:var(--dim);background:var(--bg);}
+.alink-c{color:#0891b2;background:rgba(6,182,212,0.08);}
+
+/* CONSULTANT CELL */
+.c-cell{display:flex;align-items:center;gap:8px;}
+.c-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+
+/* QUICK ACTION CARDS */
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.qa-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.qa-card:hover{border-color:var(--p);box-shadow:var(--shadow);transform:translateY(-1px);}
+.qa-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qa-label{font-size:12.5px;font-weight:600;color:var(--text);}
+.qa-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* DONUT PLACEHOLDER */
+.donut-wrap{display:flex;align-items:center;gap:20px;padding:16px 18px;}
+.donut{width:90px;height:90px;border-radius:50%;background:conic-gradient(var(--green) 0deg 108deg,var(--p) 108deg 180deg,var(--purple) 180deg 228deg,var(--amber) 228deg 270deg,var(--red) 270deg 360deg);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.donut-inner{width:60px;height:60px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-val{font-size:14px;font-weight:800;color:var(--text);font-family:'JetBrains Mono',monospace;}
+.donut-lbl{font-size:8px;color:var(--muted);font-weight:600;}
+.legend{display:flex;flex-direction:column;gap:5px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:11px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-name{color:var(--text2);flex:1;}
+.leg-val{font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.leg-pct{font-size:10px;color:var(--muted);}
+
+/* UPCOMING SECTION */
+.upcoming-item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f1f5f9;}
+.upcoming-item:last-child{border-bottom:none;}
+.cal-block{width:36px;flex-shrink:0;text-align:center;background:var(--p-light);border-radius:7px;padding:4px 2px;}
+.cal-day{font-size:14px;font-weight:800;color:var(--p);line-height:1;}
+.cal-mon{font-size:8px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:0.5px;}
+.upc-content{flex:1;}
+.upc-title{font-size:12.5px;font-weight:600;color:var(--text);}
+.upc-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.upc-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;}
+
+/* CONTRACT STATUS */
+.contract-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f1f5f9;}
+.contract-row:last-child{border-bottom:none;}
+.cr-left{display:flex;align-items:center;gap:9px;}
+.cr-info .cr-name{font-size:12.5px;font-weight:600;color:var(--text);}
+.cr-info .cr-role{font-size:10.5px;color:var(--muted);}
+.cr-right{display:flex;align-items:center;gap:8px;}
+.cr-status-dot{width:7px;height:7px;border-radius:50%;}
+
+/* PROGRESS STEPS */
+.contract-steps{display:flex;gap:3px;align-items:center;}
+.cs{width:20px;height:4px;border-radius:100px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">H8</div>
+    <div class="logo-text">HRM<span>8</span></div>
+  </div>
+  <div class="vendor-chip">
+    <div class="vendor-id">VENDOR · #0047</div>
+    <div class="vendor-name">Vendor #0047</div>
+    <div class="vendor-status"><div class="dot"></div><span>Active · Stryker Portal</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <a href="vendor-dashboard.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="jobs-list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      Job Invitations
+      <span class="nav-badge a">3</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+      My Candidates
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Billing</div>
+    <a href="timesheet.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Timesheets
+      <span class="nav-badge a">2</span>
+    </a>
+    <a href="invoices.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Invoices
+      <span class="nav-badge a">1</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Documents
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Account</div>
+    <a href="vendor-onboarding.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Profile / Settings
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="footer-user">
+      <div class="user-avatar">V47</div>
+      <div class="user-info">
+        <div class="user-name">Vendor #0047</div>
+        <div class="user-role">Account Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="top-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span style="color:var(--text);font-weight:600;">Dashboard</span>
+        <span class="sep">·</span>
+        <span>Apr 2026</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <a href="jobs-list.html" class="btn btn-primary btn-sm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        View Job Invitations
+      </a>
+      <div class="avatar-btn">V47</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- HERO BANNER -->
+    <div class="hero-banner">
+      <div class="hero-left">
+        <div class="hero-greeting">Vendor Portal · Stryker</div>
+        <div class="hero-title">Welcome back, Vendor #0047</div>
+        <div class="hero-sub">You have 3 new job invitations and 2 timesheets pending submission.<br>Apr 2026 billing cycle ends in 9 days.</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat"><div class="hs-val">5</div><div class="hs-lbl">Active Placements</div></div>
+        <div class="hero-divider"></div>
+        <div class="hero-stat"><div class="hs-val">12</div><div class="hs-lbl">CVs Submitted</div></div>
+        <div class="hero-divider"></div>
+        <div class="hero-stat"><div class="hs-val">₹38L</div><div class="hs-lbl">FY Billed</div></div>
+        <div class="hero-divider"></div>
+        <div class="hero-stat"><div class="hs-val">3</div><div class="hs-lbl">Open Invitations</div></div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="qa-grid">
+      <a href="jobs-list.html" class="qa-card">
+        <div class="qa-icon" style="background:rgba(245,158,11,0.1);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </div>
+        <div><div class="qa-label">New Job Invitations</div><div class="qa-sub">3 open for submission</div></div>
+      </a>
+      <a href="timesheet.html" class="qa-card">
+        <div class="qa-icon" style="background:rgba(239,68,68,0.08);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <div><div class="qa-label">Submit Timesheets</div><div class="qa-sub">2 pending · Due this week</div></div>
+      </a>
+      <a href="invoices.html" class="qa-card">
+        <div class="qa-icon" style="background:var(--p-light);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div><div class="qa-label">Generate Invoice</div><div class="qa-sub">2 approved timesheets ready</div></div>
+      </a>
+      <a href="#" class="qa-card">
+        <div class="qa-icon" style="background:rgba(16,185,129,0.1);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div><div class="qa-label">View Documents</div><div class="qa-sub">SOW, PO, contracts</div></div>
+      </a>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(79,70,229,0.08);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </div>
+        <div class="stat-label">Active Positions</div>
+        <div class="stat-value">5</div>
+        <div class="stat-sub">At Stryker</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(6,182,212,0.08);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+        </div>
+        <div class="stat-label">CVs Submitted</div>
+        <div class="stat-value">12</div>
+        <div class="stat-sub">This month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(245,158,11,0.08);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="stat-label">Shortlisted</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">In pipeline</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(139,92,246,0.08);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="stat-label">In Interview</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Across 2 roles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(16,185,129,0.08);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-label">Hired (YTD)</div>
+        <div class="stat-value" style="color:var(--green);">5</div>
+        <div class="stat-sub">FY 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(239,68,68,0.07);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div class="stat-label">Rejected</div>
+        <div class="stat-value" style="color:var(--red);">4</div>
+        <div class="stat-sub">This quarter</div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT: Candidate Pipeline + Contract Status -->
+    <div class="two-col">
+
+      <!-- CANDIDATE PIPELINE TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Candidate Submissions</div>
+            <div class="card-sub">All CVs submitted by Vendor #0047 to Stryker</div>
+          </div>
+          <a href="job-detail.html" class="btn btn-primary btn-sm">+ Submit CV</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Role</th>
+              <th>Submitted</th>
+              <th>Stage</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">AM</div>
+                  <div><div class="td-primary" style="font-size:12px;">Arjun Mehta</div><div style="font-size:10px;color:var(--muted);">Data Engineer · 5 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">Data Platform Lead</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 8</td>
+              <td><span class="badge b-hired">✓ Hired</span></td>
+              <td><button class="alink alink-g">View Contract</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(6,182,212,0.1);color:var(--cyan);">PN</div>
+                  <div><div class="td-primary" style="font-size:12px;">Priya Nair</div><div style="font-size:10px;color:var(--muted);">Frontend Dev · 4 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">Sr. Frontend Developer</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 8</td>
+              <td><span class="badge b-hired">✓ Hired</span></td>
+              <td><button class="alink alink-g">View Contract</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(139,92,246,0.1);color:var(--purple);">SR</div>
+                  <div><div class="td-primary" style="font-size:12px;">Sneha Reddy</div><div style="font-size:10px;color:var(--muted);">Backend Dev · 6 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">Backend Engineer</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 15</td>
+              <td><span class="badge b-r2">Interview R2</span></td>
+              <td><button class="alink alink-p">Track</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">RK</div>
+                  <div><div class="td-primary" style="font-size:12px;">Rajesh Kumar</div><div style="font-size:10px;color:var(--muted);">DevOps · 7 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">DevOps Lead</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 10</td>
+              <td><span class="badge b-r1">Interview R1</span></td>
+              <td><button class="alink alink-p">Track</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(245,158,11,0.1);color:var(--amber);">VR</div>
+                  <div><div class="td-primary" style="font-size:12px;">Vikram Rao</div><div style="font-size:10px;color:var(--muted);">QA Lead · 8 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">QA Automation Lead</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 12</td>
+              <td><span class="badge b-r1">Interview R1</span></td>
+              <td><button class="alink alink-p">Track</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(239,68,68,0.08);color:var(--red);">KP</div>
+                  <div><div class="td-primary" style="font-size:12px;">Kavya Pillai</div><div style="font-size:10px;color:var(--muted);">PM · 5 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">Product Manager</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 18</td>
+              <td><span class="badge b-cv">CV Review</span></td>
+              <td><button class="alink alink-d">View</button></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(16,185,129,0.1);color:var(--green);">MS</div>
+                  <div><div class="td-primary" style="font-size:12px;">Mihir Shah</div><div style="font-size:10px;color:var(--muted);">ML Eng · 4 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">ML Engineer</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 20</td>
+              <td><span class="badge b-cv">CV Review</span></td>
+              <td><button class="alink alink-d">View</button></td>
+            </tr>
+            <tr style="opacity:0.65;">
+              <td>
+                <div class="c-cell">
+                  <div class="c-av" style="background:rgba(239,68,68,0.08);color:var(--red);">NJ</div>
+                  <div><div class="td-primary" style="font-size:12px;">Nisha Joshi</div><div style="font-size:10px;color:var(--muted);">Designer · 3 yrs</div></div>
+                </div>
+              </td>
+              <td style="font-size:11.5px;color:var(--text2);">UX Designer</td>
+              <td class="td-mono" style="font-size:10.5px;color:var(--muted);">Apr 5</td>
+              <td><span class="badge b-rejected">✗ Rejected</span></td>
+              <td><button class="alink alink-d">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+
+        <!-- PIPELINE DONUT -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Submission Funnel</div>
+            <span style="font-size:10.5px;color:var(--muted);">12 total CVs</span>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut">
+              <div class="donut-inner">
+                <div class="donut-val">12</div>
+                <div class="donut-lbl">CVs</div>
+              </div>
+            </div>
+            <div class="legend">
+              <div class="legend-item"><div class="leg-dot" style="background:var(--green);"></div><div class="leg-name">Hired</div><div class="leg-val">5</div><div class="leg-pct">41%</div></div>
+              <div class="legend-item"><div class="leg-dot" style="background:var(--p);"></div><div class="leg-name">In Interview</div><div class="leg-val">3</div><div class="leg-pct">25%</div></div>
+              <div class="legend-item"><div class="leg-dot" style="background:var(--purple);"></div><div class="leg-name">CV Review</div><div class="leg-val">2</div><div class="leg-pct">17%</div></div>
+              <div class="legend-item"><div class="leg-dot" style="background:var(--amber);"></div><div class="leg-name">Offer Stage</div><div class="leg-val">1</div><div class="leg-pct">8%</div></div>
+              <div class="legend-item"><div class="leg-dot" style="background:var(--red);"></div><div class="leg-name">Rejected</div><div class="leg-val">1</div><div class="leg-pct">8%</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTRACT STATUS -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Active Contracts</div>
+              <div class="card-sub">Hired consultants · Placement lifecycle</div>
+            </div>
+          </div>
+          <div style="padding:0 16px;">
+            <!-- Arjun Mehta Contract -->
+            <div class="contract-row">
+              <div class="cr-left">
+                <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">AM</div>
+                <div class="cr-info">
+                  <div class="cr-name">Arjun Mehta</div>
+                  <div class="cr-role">Data Engineer · ₹2,800/h</div>
+                </div>
+              </div>
+              <div class="cr-right">
+                <div class="contract-steps">
+                  <div class="cs" style="background:var(--green);" title="SOW"></div>
+                  <div class="cs" style="background:var(--green);" title="PO"></div>
+                  <div class="cs" style="background:var(--green);" title="Joined"></div>
+                  <div class="cs" style="background:var(--green);" title="Timesheet"></div>
+                  <div class="cs" style="background:var(--p);" title="Invoice"></div>
+                  <div class="cs" style="background:var(--border);" title="Paid"></div>
+                </div>
+                <span style="font-size:10px;color:var(--dim);margin-left:4px;">Invoice</span>
+              </div>
+            </div>
+            <!-- Priya Nair Contract -->
+            <div class="contract-row">
+              <div class="cr-left">
+                <div class="c-av" style="background:rgba(6,182,212,0.1);color:var(--cyan);width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">PN</div>
+                <div class="cr-info">
+                  <div class="cr-name">Priya Nair</div>
+                  <div class="cr-role">Frontend Dev · ₹3,600/h</div>
+                </div>
+              </div>
+              <div class="cr-right">
+                <div class="contract-steps">
+                  <div class="cs" style="background:var(--green);" title="SOW"></div>
+                  <div class="cs" style="background:var(--green);" title="PO"></div>
+                  <div class="cs" style="background:var(--green);" title="Joined"></div>
+                  <div class="cs" style="background:var(--amber);" title="Timesheet — In Review"></div>
+                  <div class="cs" style="background:var(--border);" title="Invoice"></div>
+                  <div class="cs" style="background:var(--border);" title="Paid"></div>
+                </div>
+                <span style="font-size:10px;color:var(--amber);margin-left:4px;">TS Review</span>
+              </div>
+            </div>
+            <!-- Rajesh Contract -->
+            <div class="contract-row">
+              <div class="cr-left">
+                <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">RK</div>
+                <div class="cr-info">
+                  <div class="cr-name">Rajesh Kumar</div>
+                  <div class="cr-role">DevOps Eng · ₹3,200/h</div>
+                </div>
+              </div>
+              <div class="cr-right">
+                <div class="contract-steps">
+                  <div class="cs" style="background:var(--green);" title="SOW"></div>
+                  <div class="cs" style="background:var(--green);" title="PO"></div>
+                  <div class="cs" style="background:var(--green);" title="Joined"></div>
+                  <div class="cs" style="background:var(--green);" title="Timesheet"></div>
+                  <div class="cs" style="background:var(--green);" title="Invoice"></div>
+                  <div class="cs" style="background:var(--cyan);" title="Processing"></div>
+                </div>
+                <span style="font-size:10px;color:var(--cyan);margin-left:4px;">Processing</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:8px 16px 12px;">
+            <div style="font-size:9.5px;font-weight:600;color:var(--muted);letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase;">Contract Stage Legend</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px;"><span style="width:8px;height:4px;border-radius:2px;background:var(--green);display:inline-block;"></span>Done</span>
+              <span style="font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px;"><span style="width:8px;height:4px;border-radius:2px;background:var(--amber);display:inline-block;"></span>In Progress</span>
+              <span style="font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px;"><span style="width:8px;height:4px;border-radius:2px;background:var(--p);display:inline-block;"></span>Active</span>
+              <span style="font-size:10px;color:var(--dim);display:flex;align-items:center;gap:3px;"><span style="width:8px;height:4px;border-radius:2px;background:var(--border);display:inline-block;"></span>Pending</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPCOMING ACTIVITY -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Upcoming</div>
+            <span style="font-size:10.5px;color:var(--muted);">Next 7 days</span>
+          </div>
+          <div style="padding:4px 16px;">
+            <div class="upcoming-item">
+              <div class="cal-block"><div class="cal-day">24</div><div class="cal-mon">Apr</div></div>
+              <div class="upc-content">
+                <div class="upc-title">Timesheet deadline — Rajesh Kumar</div>
+                <div class="upc-sub">DevOps Lead · Apr 21–27 period</div>
+              </div>
+              <span class="upc-badge" style="background:rgba(239,68,68,0.1);color:var(--red);">Urgent</span>
+            </div>
+            <div class="upcoming-item">
+              <div class="cal-block"><div class="cal-day">25</div><div class="cal-mon">Apr</div></div>
+              <div class="upc-content">
+                <div class="upc-title">Interview R2 — Sneha Reddy</div>
+                <div class="upc-sub">Backend Engineer · Stryker HM panel</div>
+              </div>
+              <span class="upc-badge" style="background:var(--p-light);color:var(--p);">Interview</span>
+            </div>
+            <div class="upcoming-item">
+              <div class="cal-block"><div class="cal-day">26</div><div class="cal-mon">Apr</div></div>
+              <div class="upc-content">
+                <div class="upc-title">Invoice follow-up — INV-2026-044</div>
+                <div class="upc-sub">Overdue · Vikram Rao · ₹70,400</div>
+              </div>
+              <span class="upc-badge" style="background:rgba(239,68,68,0.1);color:var(--red);">Overdue</span>
+            </div>
+            <div class="upcoming-item" style="border-bottom:none;">
+              <div class="cal-block" style="background:rgba(16,185,129,0.08);"><div class="cal-day" style="color:var(--green);">30</div><div class="cal-mon" style="color:var(--green);">Apr</div></div>
+              <div class="upc-content">
+                <div class="upc-title">SOW renewal — Arjun Mehta</div>
+                <div class="upc-sub">Data Platform contract · 3-month extension</div>
+              </div>
+              <span class="upc-badge" style="background:rgba(16,185,129,0.1);color:var(--green);">Renewal</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end two-col -->
+
+    <!-- ACTIVE JOB INVITATIONS TABLE -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Active Job Invitations</div>
+          <div class="card-sub">Jobs published to Vendor #0047 by Stryker · Submit CVs before deadline</div>
+        </div>
+        <a href="jobs-list.html" class="btn btn-outline btn-sm">View All Invitations →</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Type</th>
+            <th>Experience</th>
+            <th>CV Limit</th>
+            <th>Submitted</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div><div class="td-primary" style="font-size:12.5px;">ML Engineer</div><div style="font-size:10.5px;color:var(--muted);">AI / Data Science · Stryker</div></div>
+            </td>
+            <td><span class="badge b-contract" style="font-size:10px;">Contract</span></td>
+            <td style="font-size:12px;">4–8 yrs</td>
+            <td class="td-mono">5</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span class="td-mono" style="font-weight:700;color:var(--text);">1 / 5</span>
+                <div style="width:50px;"><div class="mini-bar"><div class="mini-bar-fill" style="width:20%;background:var(--amber);"></div></div></div>
+              </div>
+            </td>
+            <td class="td-mono" style="font-size:11.5px;color:var(--amber);">Apr 28</td>
+            <td><span class="badge" style="background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);font-size:10.5px;">New Invite</span></td>
+            <td><a href="job-detail.html" class="alink alink-p">Submit CVs</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div><div class="td-primary" style="font-size:12.5px;">Cloud Infrastructure Eng</div><div style="font-size:10.5px;color:var(--muted);">Platform · Stryker</div></div>
+            </td>
+            <td><span class="badge b-contract" style="font-size:10px;">Contract</span></td>
+            <td style="font-size:12px;">5–10 yrs</td>
+            <td class="td-mono">3</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span class="td-mono" style="font-weight:700;color:var(--text);">2 / 3</span>
+                <div style="width:50px;"><div class="mini-bar"><div class="mini-bar-fill" style="width:67%;background:var(--green);"></div></div></div>
+              </div>
+            </td>
+            <td class="td-mono" style="font-size:11.5px;">Apr 30</td>
+            <td><span class="badge" style="background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);font-size:10.5px;">Submitting</span></td>
+            <td><a href="job-detail.html" class="alink alink-p">Submit CV</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div><div class="td-primary" style="font-size:12.5px;">Senior Product Manager</div><div style="font-size:10.5px;color:var(--muted);">Product · Stryker</div></div>
+            </td>
+            <td><span class="badge b-fte" style="font-size:10px;">FTE</span></td>
+            <td style="font-size:12px;">6–12 yrs</td>
+            <td class="td-mono">4</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <span class="td-mono" style="font-weight:700;color:var(--text);">0 / 4</span>
+                <div style="width:50px;"><div class="mini-bar"><div class="mini-bar-fill" style="width:0%;background:var(--border);"></div></div></div>
+              </div>
+            </td>
+            <td class="td-mono" style="font-size:11.5px;">May 5</td>
+            <td><span class="badge" style="background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);font-size:10.5px;">New Invite</span></td>
+            <td><a href="job-detail.html" class="alink alink-p">Submit CVs</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

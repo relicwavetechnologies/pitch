@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM8 Vendor Portal — Invoices</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root {
+  --bg:#f4f5fb; --card:#ffffff; --sidebar:#ffffff;
+  --p:#4f46e5; --p-light:rgba(79,70,229,0.08); --p-mid:rgba(79,70,229,0.15); --p2:#6366f1;
+  --blue:#3b82f6; --cyan:#06b6d4; --green:#10b981; --amber:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  --text:#0f172a; --text2:#334155; --dim:#64748b; --muted:#94a3b8;
+  --border:#e2e8f0; --border-mid:#cbd5e1;
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow:0 4px 12px rgba(15,23,42,0.07),0 1px 3px rgba(15,23,42,0.04);
+  --shadow-lg:0 12px 32px rgba(15,23,42,0.1);
+  --sidebar-w:240px; --header-h:60px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;min-height:100vh;}
+
+/* SIDEBAR — same as timesheet.html */
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.5px;}
+.logo-text span{color:var(--p);}
+.vendor-chip{margin:12px 12px 4px;padding:10px 12px;background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(6,182,212,0.03));border:1px solid rgba(6,182,212,0.18);border-radius:10px;}
+.vendor-id{font-size:9px;font-weight:700;color:var(--cyan);letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;}
+.vendor-name{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px;}
+.vendor-status{display:flex;align-items:center;gap:5px;margin-top:4px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.vendor-status span{font-size:10px;color:var(--dim);}
+.nav-section{padding:6px 10px;}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--dim);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.nav-item:hover{background:#f8f9ff;color:var(--text2);}
+.nav-item.active{background:var(--p-light);color:var(--p);font-weight:600;}
+.nav-item svg{flex-shrink:0;width:16px;height:16px;}
+.nav-badge{margin-left:auto;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.nav-badge.a{background:var(--amber);}
+.nav-badge.g{background:var(--green);}
+.nav-badge.u{background:#f1f5f9;color:var(--muted);border:1px solid var(--border-mid);letter-spacing:.2px;}
+.nav-item.soon{opacity:.5;pointer-events:none;cursor:default;}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+.footer-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;}
+.footer-user:hover{background:var(--bg);}
+.user-avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.user-info{flex:1;}
+.user-name{font-size:12px;font-weight:600;color:var(--text);}
+.user-role{font-size:10px;color:var(--muted);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.top-header{height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:50;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.breadcrumb{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.breadcrumb .sep{color:var(--border-mid);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.avatar-btn{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s;text-decoration:none;}
+.btn-primary{background:var(--p);color:#fff;}
+.btn-primary:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+.btn-outline{background:#fff;color:var(--text2);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--p);color:var(--p);}
+.btn-sm{padding:5px 13px;font-size:11.5px;}
+.btn-ghost{background:transparent;color:var(--dim);padding:6px 10px;}
+.btn-ghost:hover{background:var(--bg);color:var(--text2);}
+
+/* PAGE */
+.page-content{padding:22px 26px;flex:1;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.ph-left h1{font-size:20px;font-weight:700;color:var(--text);}
+.ph-left p{font-size:12.5px;color:var(--dim);margin-top:3px;}
+.ph-right{display:flex;gap:8px;align-items:center;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:all 0.2s;}
+.stat-card:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
+.stat-card.active-filter{border-color:var(--p);box-shadow:0 0 0 2px var(--p-light);}
+.stat-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+.stat-label{font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;}
+.stat-value{font-size:22px;font-weight:700;color:var(--text);line-height:1;}
+.stat-sub{font-size:10px;color:var(--dim);}
+
+/* PIPELINE STATUS BAR */
+.pipeline-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;}
+.pipeline-bar-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.pipeline-track{display:flex;align-items:center;gap:0;}
+.pipeline-step{flex:1;text-align:center;position:relative;}
+.ps-bar{height:6px;background:var(--border);margin-bottom:6px;position:relative;}
+.ps-bar-fill{position:absolute;left:0;top:0;height:100%;border-radius:0;}
+.pipeline-step:first-child .ps-bar{border-radius:4px 0 0 4px;}
+.pipeline-step:last-child .ps-bar{border-radius:0 4px 4px 0;}
+.ps-label{font-size:10px;font-weight:600;color:var(--dim);}
+.ps-count{font-size:15px;font-weight:700;}
+.ps-amount{font-size:9.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;background:var(--bg);border-radius:9px;padding:3px;width:fit-content;border:1px solid var(--border);margin-bottom:14px;}
+.tab{padding:6px 16px;border-radius:7px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab.active{background:var(--card);color:var(--text);box-shadow:var(--shadow-sm);}
+.tc{font-size:9px;font-weight:700;padding:1px 5px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.tc-p{background:var(--p-light);color:var(--p);}
+.tc-a{background:rgba(245,158,11,0.1);color:var(--amber);}
+.tc-g{background:rgba(16,185,129,0.1);color:var(--green);}
+.tc-r{background:rgba(239,68,68,0.1);color:var(--red);}
+.tc-c{background:rgba(6,182,212,0.08);color:var(--cyan);}
+.tc-d{background:rgba(148,163,184,0.15);color:var(--dim);}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 13px;flex:1;max-width:280px;}
+.search-box input{border:none;outline:none;font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--text2);background:transparent;width:100%;}
+.search-box input::placeholder{color:var(--muted);}
+
+/* LAYOUT — MAIN TABLE + DETAIL PANEL SIDE BY SIDE */
+.split-layout{display:grid;grid-template-columns:1fr 420px;gap:16px;align-items:start;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:13.5px;font-weight:700;color:var(--text);}
+.card-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg);white-space:nowrap;}
+tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.15s;cursor:pointer;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#fafbff;}
+tbody tr.selected{background:rgba(79,70,229,0.04);border-left:3px solid var(--p);}
+td{padding:11px 14px;font-size:12.5px;color:var(--text2);vertical-align:middle;}
+.td-primary{font-weight:600;color:var(--text);}
+.td-mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-draft{background:rgba(148,163,184,0.15);color:var(--dim);border:1px solid rgba(148,163,184,0.2);}
+.b-sent{background:rgba(59,130,246,0.08);color:#2563eb;border:1px solid rgba(59,130,246,0.18);}
+.b-approved{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.18);}
+.b-paid{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.2);}
+.b-overdue{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.15);}
+.b-processing{background:rgba(6,182,212,0.08);color:#0891b2;border:1px solid rgba(6,182,212,0.18);}
+
+/* ACTION LINKS */
+.act-row{display:flex;align-items:center;gap:5px;}
+.alink{font-size:11px;font-weight:600;cursor:pointer;padding:3px 8px;border-radius:6px;border:none;font-family:'Poppins',sans-serif;transition:all 0.15s;}
+.alink-p{color:var(--p);background:var(--p-light);}
+.alink-g{color:#059669;background:rgba(16,185,129,0.08);}
+.alink-a{color:#b45309;background:rgba(245,158,11,0.08);}
+.alink-r{color:#dc2626;background:rgba(239,68,68,0.08);}
+.alink-c{color:#0891b2;background:rgba(6,182,212,0.08);}
+.alink-d{color:var(--dim);background:var(--bg);}
+
+/* CONSULTANT CELL */
+.c-cell{display:flex;align-items:center;gap:9px;}
+.c-av{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+
+/* INVOICE DETAIL PANEL */
+.detail-panel{position:sticky;top:76px;}
+.invoice-preview{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.inv-header{background:linear-gradient(135deg,var(--p),var(--p2));padding:20px 22px;color:#fff;}
+.inv-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.inv-logo{display:flex;align-items:center;gap:8px;}
+.inv-logo-mark{width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.inv-logo-text{font-size:14px;font-weight:700;}
+.inv-num{font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:100px;}
+.inv-title{font-size:11px;font-weight:500;opacity:0.75;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.inv-amount{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1;}
+.inv-sub{font-size:11px;opacity:0.7;margin-top:4px;}
+.inv-body{padding:18px 20px;}
+.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.inv-meta-item .iml{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.inv-meta-item .imv{font-size:12.5px;font-weight:600;color:var(--text);margin-top:1px;}
+.inv-meta-item .ims{font-size:10.5px;color:var(--dim);}
+.inv-divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* LINE ITEMS */
+.line-items{margin-bottom:14px;}
+.li-header{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:6px 10px;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:var(--bg);}
+.line-item{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:8px 10px;border-bottom:1px solid #f1f5f9;font-size:12px;align-items:center;}
+.line-item:last-child{border-bottom:none;}
+.li-desc{color:var(--text2);}
+.li-qty,.li-rate,.li-amt{font-family:'JetBrains Mono',monospace;font-size:11.5px;text-align:right;color:var(--dim);}
+.li-amt{font-weight:600;color:var(--text);}
+
+/* TOTALS */
+.totals{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:14px;}
+.total-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12.5px;}
+.total-row.grand{padding-top:10px;border-top:1px solid var(--border);margin-top:6px;font-weight:700;font-size:14px;}
+.total-row.grand .tr-val{color:var(--p);}
+.tr-lbl{color:var(--dim);}
+.tr-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2);}
+
+/* PAYMENT TERMS */
+.payment-box{background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.03));border:1px solid rgba(16,185,129,0.15);border-radius:9px;padding:11px 14px;margin-bottom:12px;}
+.pb-title{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.pb-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);padding:2px 0;}
+.pb-row span:last-child{font-weight:600;color:var(--text);}
+
+/* OVERDUE ALERT */
+.overdue-alert{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.18);border-radius:9px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.oa-text{font-size:12px;color:#dc2626;font-weight:500;}
+.oa-text strong{font-weight:700;}
+
+/* TIMELINE */
+.inv-timeline{margin-top:4px;}
+.tl-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+.tl-item{display:flex;gap:10px;align-items:flex-start;padding-bottom:10px;position:relative;}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:9px;top:20px;width:1px;bottom:0;background:var(--border);}
+.tl-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;margin-top:1px;}
+.tl-dot.done{background:var(--green);color:#fff;}
+.tl-dot.active{background:var(--p);color:#fff;}
+.tl-dot.pending{background:var(--bg);border:2px solid var(--border);}
+.tl-dot.overdue{background:var(--red);color:#fff;}
+.tl-content{flex:1;}
+.tl-label{font-size:12px;font-weight:600;color:var(--text);}
+.tl-date{font-size:10.5px;color:var(--muted);}
+
+/* SUMMARY BAR (bottom of page) */
+.summary-footer{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;margin-bottom:24px;}
+.sf-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);text-align:center;}
+.sf-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.sf-value{font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.sf-sub{font-size:10.5px;color:var(--dim);margin-top:3px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">H8</div>
+    <div class="logo-text">HRM<span>8</span></div>
+  </div>
+  <div class="vendor-chip">
+    <div class="vendor-id">VENDOR · #0047</div>
+    <div class="vendor-name">Vendor #0047</div>
+    <div class="vendor-status"><div class="dot"></div><span>Active · Stryker Portal</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <a href="vendor-dashboard.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="jobs-list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      Job Invitations
+      <span class="nav-badge a">3</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+      My Candidates
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Billing</div>
+    <a href="timesheet.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Timesheets
+      <span class="nav-badge a">2</span>
+    </a>
+    <a href="invoices.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Invoices
+      <span class="nav-badge a">1</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Documents
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Account</div>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="footer-user">
+      <div class="user-avatar">V47</div>
+      <div class="user-info">
+        <div class="user-name">Vendor #0047</div>
+        <div class="user-role">Account Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="top-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>Vendor Portal</span><span class="sep">/</span>
+        <span style="color:var(--text);font-weight:600;">Invoices</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar-btn">V47</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="ph-left">
+        <h1>Invoices</h1>
+        <p>Manage and track all invoices generated from approved timesheets · Client: Stryker</p>
+      </div>
+      <div class="ph-right">
+        <button class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Generate Invoice
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(148,163,184,0.12);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="stat-label">Draft</div>
+        <div class="stat-value">2</div>
+        <div class="stat-sub">Ready to send</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(59,130,246,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </div>
+        <div class="stat-label">Sent to Client</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Awaiting approval</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--p-light);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="stat-label">Approved</div>
+        <div class="stat-value">4</div>
+        <div class="stat-sub">Processing payment</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(16,185,129,0.1);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="stat-label">Paid</div>
+        <div class="stat-value">14</div>
+        <div class="stat-sub">Apr 2026 YTD</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(239,68,68,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="stat-label">Overdue</div>
+        <div class="stat-value" style="color:var(--red);">1</div>
+        <div class="stat-sub">Action needed</div>
+      </div>
+      <div class="stat-card" style="border-color:rgba(79,70,229,0.15);background:linear-gradient(135deg,rgba(79,70,229,0.04),rgba(79,70,229,0.01));">
+        <div class="stat-icon" style="background:var(--p-light);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="stat-label">Total Billed</div>
+        <div class="stat-value" style="font-size:16px;color:var(--p);">₹38.4L</div>
+        <div class="stat-sub">FY 2026</div>
+      </div>
+    </div>
+
+    <!-- PIPELINE PROGRESS BAR -->
+    <div class="pipeline-bar">
+      <div class="pipeline-bar-title">Invoice Pipeline — Apr 2026</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+        <div>
+          <div class="ps-bar"><div class="ps-bar-fill" style="width:100%;background:var(--border-mid);"></div></div>
+          <div class="ps-label">Draft</div>
+          <div class="ps-count" style="color:var(--dim);">2</div>
+          <div class="ps-amount">₹2,56,000</div>
+        </div>
+        <div>
+          <div class="ps-bar"><div class="ps-bar-fill" style="width:100%;background:var(--blue);"></div></div>
+          <div class="ps-label">Sent</div>
+          <div class="ps-count" style="color:var(--blue);">3</div>
+          <div class="ps-amount">₹3,84,000</div>
+        </div>
+        <div>
+          <div class="ps-bar"><div class="ps-bar-fill" style="width:100%;background:var(--p);"></div></div>
+          <div class="ps-label">Approved</div>
+          <div class="ps-count" style="color:var(--p);">4</div>
+          <div class="ps-amount">₹5,12,000</div>
+        </div>
+        <div>
+          <div class="ps-bar"><div class="ps-bar-fill" style="width:100%;background:var(--cyan);"></div></div>
+          <div class="ps-label">Processing</div>
+          <div class="ps-count" style="color:var(--cyan);">2</div>
+          <div class="ps-amount">₹2,24,000</div>
+        </div>
+        <div>
+          <div class="ps-bar"><div class="ps-bar-fill" style="width:100%;background:var(--green);"></div></div>
+          <div class="ps-label">Paid</div>
+          <div class="ps-count" style="color:var(--green);">14</div>
+          <div class="ps-amount">₹18,24,000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active">All <span class="tc tc-p">24</span></div>
+      <div class="tab">Draft <span class="tc tc-d">2</span></div>
+      <div class="tab">Sent <span class="tc" style="background:rgba(59,130,246,0.1);color:var(--blue);">3</span></div>
+      <div class="tab">Approved <span class="tc tc-p">4</span></div>
+      <div class="tab">Paid <span class="tc tc-g">14</span></div>
+      <div class="tab">Overdue <span class="tc tc-r">1</span></div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search invoice, consultant…">
+      </div>
+      <button class="btn btn-outline btn-sm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Date Range
+      </button>
+      <button class="btn btn-outline btn-sm">Client: Stryker ▾</button>
+    </div>
+
+    <!-- SPLIT LAYOUT: TABLE + DETAIL PANEL -->
+    <div class="split-layout">
+
+      <!-- INVOICE TABLE -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Invoice Log</div>
+            <div class="card-sub">Click a row to preview invoice</div>
+          </div>
+          <span style="font-size:11px;color:var(--muted);">Showing 8 of 24</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Consultant</th>
+                <th>Period</th>
+                <th>Hours</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- OVERDUE — highlighted -->
+              <tr style="background:rgba(239,68,68,0.02);">
+                <td class="td-mono" style="color:var(--red);">INV-2026-044</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(239,68,68,0.1);color:var(--red);">VR</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Vikram Rao</div><div style="font-size:10px;color:var(--muted);">QA Lead</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Apr 7–13</td>
+                <td class="td-mono">32h</td>
+                <td class="td-mono" style="font-weight:700;color:var(--text);">₹70,400</td>
+                <td><span class="badge b-overdue">⚠ Overdue</span></td>
+                <td class="td-mono" style="color:var(--red);font-size:11.5px;">Apr 25 (−3d)</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-r">Follow Up</button>
+                    <button class="alink alink-d">View</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- DRAFT -->
+              <tr>
+                <td class="td-mono" style="color:var(--dim);">INV-2026-045</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">AM</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Arjun Mehta</div><div style="font-size:10px;color:var(--muted);">Data Engineer</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Apr 14–20</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,12,000</td>
+                <td><span class="badge b-draft">Draft</span></td>
+                <td class="td-mono" style="color:var(--muted);">—</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-p">Finalize</button>
+                    <button class="alink alink-d">Edit</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- SENT (selected — highlighted) -->
+              <tr class="selected">
+                <td class="td-mono" style="color:var(--p);font-weight:700;">INV-2026-040</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(139,92,246,0.1);color:var(--purple);">SR</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Sneha Reddy</div><div style="font-size:10px;color:var(--muted);">Backend Dev</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Apr 7–13</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹96,000</td>
+                <td><span class="badge b-sent">→ Sent</span></td>
+                <td class="td-mono" style="font-size:11.5px;">May 15</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-p">Preview ▾</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- APPROVED -->
+              <tr>
+                <td class="td-mono">INV-2026-039</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">RK</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Rajesh Kumar</div><div style="font-size:10px;color:var(--muted);">DevOps Engineer</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Apr 7–13</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,28,000</td>
+                <td><span class="badge b-approved">✓ Approved</span></td>
+                <td class="td-mono" style="font-size:11.5px;">May 10</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-g">Track Payment</button>
+                    <button class="alink alink-d">PDF</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- PAID -->
+              <tr>
+                <td class="td-mono">INV-2026-038</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(6,182,212,0.1);color:var(--cyan);">PN</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Priya Nair</div><div style="font-size:10px;color:var(--muted);">Sr. Frontend Dev</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Mar 31–Apr 6</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,44,000</td>
+                <td><span class="badge b-paid">✓ Paid</span></td>
+                <td class="td-mono" style="font-size:11.5px;">Apr 30</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-d">View</button>
+                    <button class="alink alink-d">PDF</button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- PAID 2 -->
+              <tr>
+                <td class="td-mono">INV-2026-037</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(16,185,129,0.1);color:var(--green);">AM</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Arjun Mehta</div><div style="font-size:10px;color:var(--muted);">Data Engineer</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Mar 31–Apr 6</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,12,000</td>
+                <td><span class="badge b-paid">✓ Paid</span></td>
+                <td class="td-mono" style="font-size:11.5px;">Apr 28</td>
+                <td><div class="act-row"><button class="alink alink-d">View</button></div></td>
+              </tr>
+
+              <!-- PROCESSING -->
+              <tr>
+                <td class="td-mono">INV-2026-036</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">RK</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Rajesh Kumar</div><div style="font-size:10px;color:var(--muted);">DevOps Engineer</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Mar 24–30</td>
+                <td class="td-mono">38h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,21,600</td>
+                <td><span class="badge b-processing">⟳ Processing</span></td>
+                <td class="td-mono" style="font-size:11.5px;">Apr 30</td>
+                <td><div class="act-row"><button class="alink alink-c">Track</button></div></td>
+              </tr>
+
+              <!-- DRAFT 2 -->
+              <tr>
+                <td class="td-mono" style="color:var(--dim);">INV-2026-046</td>
+                <td>
+                  <div class="c-cell">
+                    <div class="c-av" style="background:rgba(6,182,212,0.1);color:var(--cyan);">PN</div>
+                    <div><div class="td-primary" style="font-size:12.5px;">Priya Nair</div><div style="font-size:10px;color:var(--muted);">Sr. Frontend Dev</div></div>
+                  </div>
+                </td>
+                <td class="td-mono" style="font-size:11px;">Apr 14–20</td>
+                <td class="td-mono">40h</td>
+                <td class="td-mono" style="font-weight:700;">₹1,44,000</td>
+                <td><span class="badge b-draft">Draft</span></td>
+                <td class="td-mono" style="color:var(--muted);">—</td>
+                <td>
+                  <div class="act-row">
+                    <button class="alink alink-p">Finalize</button>
+                    <button class="alink alink-d">Edit</button>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div><!-- end table card -->
+
+      <!-- INVOICE DETAIL PANEL (INV-2026-040 — Sneha Reddy) -->
+      <div class="detail-panel">
+        <div class="invoice-preview">
+
+          <!-- INVOICE HEADER (colored) -->
+          <div class="inv-header">
+            <div class="inv-header-top">
+              <div class="inv-logo">
+                <div class="inv-logo-mark">H8</div>
+                <div class="inv-logo-text">HRM8 · Vendor Portal</div>
+              </div>
+              <div class="inv-num">INV-2026-040</div>
+            </div>
+            <div class="inv-title">Tax Invoice</div>
+            <div class="inv-amount">₹96,000</div>
+            <div class="inv-sub">Sent to Stryker · Apr 14, 2026 · Awaiting Approval</div>
+          </div>
+
+          <div class="inv-body">
+
+            <!-- PARTIES -->
+            <div class="inv-meta">
+              <div class="inv-meta-item">
+                <div class="iml">Billed By</div>
+                <div class="imv">Vendor #0047</div>
+                <div class="ims">GST: 27AABCU9603R1ZX</div>
+              </div>
+              <div class="inv-meta-item">
+                <div class="iml">Billed To</div>
+                <div class="imv">Stryker India Pvt. Ltd.</div>
+                <div class="ims">PO: PO-STR-2026-0812</div>
+              </div>
+              <div class="inv-meta-item">
+                <div class="iml">Invoice Date</div>
+                <div class="imv">Apr 14, 2026</div>
+              </div>
+              <div class="inv-meta-item">
+                <div class="iml">Service Period</div>
+                <div class="imv">Apr 7–13, 2026</div>
+              </div>
+            </div>
+
+            <!-- REFERENCE DOCS -->
+            <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+              <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:100px;background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.15);font-family:'JetBrains Mono',monospace;">SOW-2026-0047-02</span>
+              <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);font-family:'JetBrains Mono',monospace;">PO-STR-2026-0812 ✓</span>
+              <span style="font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(6,182,212,0.08);color:#0891b2;border:1px solid rgba(6,182,212,0.18);font-family:'JetBrains Mono',monospace;">TS-046 Approved ✓</span>
+            </div>
+
+            <div class="inv-divider"></div>
+
+            <!-- LINE ITEMS -->
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Line Items</div>
+            <div class="line-items">
+              <div class="li-header">
+                <div>Description</div>
+                <div>Qty</div>
+                <div>Rate</div>
+                <div>Amount</div>
+              </div>
+              <div class="line-item">
+                <div class="li-desc">
+                  <div style="font-weight:600;font-size:12px;color:var(--text);">Sneha Reddy — Backend Developer</div>
+                  <div style="font-size:10.5px;color:var(--muted);">Apr 7–11, 2026 (Regular hours)</div>
+                </div>
+                <div class="li-qty">40h</div>
+                <div class="li-rate">₹2,400/h</div>
+                <div class="li-amt">₹96,000</div>
+              </div>
+              <div class="line-item" style="background:var(--bg);">
+                <div class="li-desc" style="color:var(--dim);">GST @ 18% (on services)</div>
+                <div class="li-qty">—</div>
+                <div class="li-rate">18%</div>
+                <div class="li-amt" style="color:var(--dim);">₹17,280</div>
+              </div>
+            </div>
+
+            <!-- TOTALS -->
+            <div class="totals">
+              <div class="total-row">
+                <div class="tr-lbl">Subtotal</div>
+                <div class="tr-val">₹96,000</div>
+              </div>
+              <div class="total-row">
+                <div class="tr-lbl">CGST (9%)</div>
+                <div class="tr-val">₹8,640</div>
+              </div>
+              <div class="total-row">
+                <div class="tr-lbl">SGST (9%)</div>
+                <div class="tr-val">₹8,640</div>
+              </div>
+              <div class="total-row grand">
+                <div class="tr-lbl" style="font-size:14px;color:var(--text);">Total Due</div>
+                <div class="tr-val" style="font-size:16px;color:var(--p);">₹1,13,280</div>
+              </div>
+            </div>
+
+            <!-- PAYMENT TERMS -->
+            <div class="payment-box">
+              <div class="pb-title">Payment Terms</div>
+              <div class="pb-row"><span>Terms</span><span>Net 60 days</span></div>
+              <div class="pb-row"><span>Invoice Date</span><span>Apr 14, 2026</span></div>
+              <div class="pb-row"><span>Due Date</span><span>Jun 13, 2026</span></div>
+              <div class="pb-row"><span>Bank</span><span>HDFC ···4821</span></div>
+            </div>
+
+            <div class="inv-divider"></div>
+
+            <!-- INVOICE TIMELINE -->
+            <div class="inv-timeline">
+              <div class="tl-title">Invoice Lifecycle</div>
+              <div class="tl-item">
+                <div class="tl-dot done">✓</div>
+                <div class="tl-content">
+                  <div class="tl-label">Timesheet Approved by Stryker</div>
+                  <div class="tl-date">Apr 11, 2026 · Kiran Desai (HM)</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot done">✓</div>
+                <div class="tl-content">
+                  <div class="tl-label">Invoice Generated</div>
+                  <div class="tl-date">Apr 14, 2026 · Auto-generated from TS-046</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot active">→</div>
+                <div class="tl-content">
+                  <div class="tl-label" style="color:var(--p);">Sent to Stryker Finance</div>
+                  <div class="tl-date">Apr 14, 2026 · Awaiting approval</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot pending"></div>
+                <div class="tl-content">
+                  <div class="tl-label" style="color:var(--muted);">Finance Approves Invoice</div>
+                  <div class="tl-date" style="color:var(--muted);">Pending · SLA: 5 business days</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot pending"></div>
+                <div class="tl-content">
+                  <div class="tl-label" style="color:var(--muted);">Payment Scheduled</div>
+                  <div class="tl-date" style="color:var(--muted);">Net 60 from invoice date (Jun 13)</div>
+                </div>
+              </div>
+              <div class="tl-item" style="padding-bottom:0;">
+                <div class="tl-dot pending"></div>
+                <div class="tl-content">
+                  <div class="tl-label" style="color:var(--muted);">Payment Received</div>
+                  <div class="tl-date" style="color:var(--muted);">Est. Jun 13–Jul 13, 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="inv-divider"></div>
+
+            <!-- ACTION BUTTONS -->
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <button class="btn btn-primary" style="width:100%;justify-content:center;border-radius:10px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Invoice PDF
+              </button>
+              <div style="display:flex;gap:7px;">
+                <button class="btn btn-outline btn-sm" style="flex:1;justify-content:center;border-radius:10px;">Send Reminder</button>
+                <button class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;">Raise Dispute</button>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- end invoice-preview -->
+
+        <!-- OVERDUE ALERT (below panel) -->
+        <div class="overdue-alert" style="margin-top:12px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="oa-text"><strong>INV-2026-044 is 3 days overdue.</strong> Follow up with Stryker Accounts Payable immediately to avoid contract penalties.</div>
+        </div>
+
+      </div><!-- end detail panel -->
+    </div><!-- end split layout -->
+
+    <!-- SUMMARY FOOTER CARDS -->
+    <div class="summary-footer">
+      <div class="sf-card">
+        <div class="sf-label">Outstanding (All)</div>
+        <div class="sf-value" style="color:var(--p);">₹10.4L</div>
+        <div class="sf-sub">Across 9 active invoices</div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-label">Paid YTD</div>
+        <div class="sf-value" style="color:var(--green);">₹28.0L</div>
+        <div class="sf-sub">14 invoices · Jan–Apr 2026</div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-label">Avg. Payment Time</div>
+        <div class="sf-value" style="color:var(--cyan);">67d</div>
+        <div class="sf-sub">Contract terms: Net 60–90</div>
+      </div>
+      <div class="sf-card">
+        <div class="sf-label">Next Expected</div>
+        <div class="sf-value" style="color:var(--amber);font-size:16px;">May 10</div>
+        <div class="sf-sub">INV-039 · ₹1,28,000</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
