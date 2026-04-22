@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM8 Vendor Portal — Job Invitations</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root {
+  --bg:#f4f5fb; --card:#ffffff; --sidebar:#ffffff;
+  --p:#4f46e5; --p-light:rgba(79,70,229,0.08); --p-mid:rgba(79,70,229,0.15); --p2:#6366f1;
+  --blue:#3b82f6; --cyan:#06b6d4; --green:#10b981; --amber:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  --text:#0f172a; --text2:#334155; --dim:#64748b; --muted:#94a3b8;
+  --border:#e2e8f0; --border-mid:#cbd5e1;
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow:0 4px 12px rgba(15,23,42,0.07),0 1px 3px rgba(15,23,42,0.04);
+  --shadow-hover:0 8px 24px rgba(79,70,229,0.12);
+  --sidebar-w:240px; --header-h:60px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.5px;}
+.logo-text span{color:var(--p);}
+.vendor-chip{margin:12px 12px 4px;padding:10px 12px;background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(6,182,212,0.03));border:1px solid rgba(6,182,212,0.18);border-radius:10px;}
+.vendor-id{font-size:9px;font-weight:700;color:var(--cyan);letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;}
+.vendor-name{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px;}
+.vendor-status{display:flex;align-items:center;gap:5px;margin-top:4px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.vendor-status span{font-size:10px;color:var(--dim);}
+.nav-section{padding:6px 10px;}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--dim);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.nav-item:hover{background:#f8f9ff;color:var(--text2);}
+.nav-item.active{background:var(--p-light);color:var(--p);font-weight:600;}
+.nav-item svg{flex-shrink:0;width:16px;height:16px;}
+.nav-badge{margin-left:auto;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.nav-badge.a{background:var(--amber);}
+.nav-badge.g{background:var(--green);}
+.nav-badge.u{background:#f1f5f9;color:var(--muted);border:1px solid var(--border-mid);letter-spacing:.2px;}
+.nav-item.soon{opacity:.5;pointer-events:none;cursor:default;}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+.footer-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;}
+.footer-user:hover{background:var(--bg);}
+.user-avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.user-info .user-name{font-size:12px;font-weight:600;color:var(--text);}
+.user-info .user-role{font-size:10px;color:var(--muted);}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.top-header{height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:50;}
+.breadcrumb{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.breadcrumb .sep{color:var(--border-mid);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.avatar-btn{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s;text-decoration:none;}
+.btn-primary{background:var(--p);color:#fff;}
+.btn-primary:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+.btn-outline{background:#fff;color:var(--text2);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--p);color:var(--p);}
+.btn-sm{padding:5px 13px;font-size:11.5px;}
+.btn-ghost{background:transparent;color:var(--dim);padding:6px 10px;}
+.page-content{padding:22px 26px;flex:1;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.ph-left h1{font-size:20px;font-weight:700;color:var(--text);}
+.ph-left p{font-size:12.5px;color:var(--dim);margin-top:3px;}
+.ph-right{display:flex;gap:8px;}
+
+/* STATS */
+.stats-strip{display:flex;gap:10px;margin-bottom:20px;}
+.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:100px;padding:8px 18px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-sm);}
+.sp-val{font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.sp-lbl{font-size:11px;color:var(--dim);}
+
+/* FILTER BAR */
+.filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm);}
+.search-box{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 13px;flex:1;max-width:300px;}
+.search-box input{border:none;outline:none;font-family:'Poppins',sans-serif;font-size:12.5px;color:var(--text2);background:transparent;width:100%;}
+.search-box input::placeholder{color:var(--muted);}
+.filter-chip{display:flex;align-items:center;gap:5px;border:1.5px solid var(--border);border-radius:100px;padding:5px 13px;font-size:11.5px;font-weight:600;color:var(--dim);cursor:pointer;background:var(--card);}
+.filter-chip:hover{border-color:var(--p);color:var(--p);}
+.filter-chip.active{border-color:var(--p);color:var(--p);background:var(--p-light);}
+.filter-sep{width:1px;height:24px;background:var(--border);}
+
+/* TABS */
+.tabs{display:flex;gap:2px;background:var(--bg);border-radius:9px;padding:3px;width:fit-content;border:1px solid var(--border);margin-bottom:18px;}
+.tab{padding:6px 16px;border-radius:7px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;display:flex;align-items:center;gap:5px;}
+.tab.active{background:var(--card);color:var(--text);box-shadow:var(--shadow-sm);}
+.tc{font-size:9px;font-weight:700;padding:1px 5px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.tc-p{background:var(--p-light);color:var(--p);}
+.tc-a{background:rgba(245,158,11,0.1);color:var(--amber);}
+.tc-g{background:rgba(16,185,129,0.1);color:var(--green);}
+.tc-d{background:rgba(148,163,184,0.15);color:var(--dim);}
+
+/* JOB CARDS GRID */
+.jobs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.job-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px 20px 16px;box-shadow:var(--shadow-sm);transition:all 0.22s;cursor:pointer;display:flex;flex-direction:column;gap:0;position:relative;overflow:hidden;}
+.job-card:hover{border-color:var(--p);box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+.job-card.new-invite{border-color:rgba(245,158,11,0.3);}
+.job-card.new-invite:hover{border-color:var(--amber);box-shadow:0 8px 24px rgba(245,158,11,0.12);}
+.job-card.urgent::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--amber));}
+.job-card.new::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),#f59e0b);}
+.job-card.active-sub::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--p),var(--p2));}
+.job-card.closed{opacity:0.6;}
+.job-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.job-client{display:flex;align-items:center;gap:7px;}
+.client-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,rgba(79,70,229,0.1),rgba(99,102,241,0.06));border:1px solid rgba(79,70,229,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace;}
+.client-info .ci-name{font-size:11px;font-weight:700;color:var(--text);}
+.client-info .ci-dept{font-size:10px;color:var(--muted);}
+.job-status-pill{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.sp-new{background:rgba(245,158,11,0.1);color:#b45309;border:1px solid rgba(245,158,11,0.2);}
+.sp-active{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.18);}
+.sp-closed{background:rgba(148,163,184,0.15);color:var(--dim);border:1px solid rgba(148,163,184,0.2);}
+.sp-urgent{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.15);}
+.job-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.job-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.job-tag{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:100px;}
+.tag-contract{background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);}
+.tag-fte{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.15);}
+.tag-exp{background:var(--bg);color:var(--dim);border:1px solid var(--border);}
+.tag-loc{background:var(--bg);color:var(--dim);border:1px solid var(--border);}
+.tag-skill{background:rgba(6,182,212,0.06);color:#0891b2;border:1px solid rgba(6,182,212,0.15);}
+.job-description{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px;}
+.job-meta-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+.jm-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--dim);}
+.jm-item svg{width:13px;height:13px;flex-shrink:0;}
+.job-submission-section{background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:14px;}
+.sub-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.sub-label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.sub-count{font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.progress-bar{height:5px;background:var(--border);border-radius:100px;overflow:hidden;}
+.pb-fill{height:100%;border-radius:100px;transition:width 0.5s;}
+.sub-deadline{font-size:10.5px;color:var(--dim);margin-top:5px;display:flex;align-items:center;gap:4px;}
+.job-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
+.jf-left{font-size:10.5px;color:var(--muted);}
+.jf-left strong{color:var(--text2);}
+
+/* DUPLICATE CHIP */
+.dup-warning{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:8px 12px;font-size:11px;color:#92400e;display:flex;align-items:center;gap:7px;margin-bottom:12px;}
+
+/* ACTION BUTTON */
+.alink{font-size:12px;font-weight:600;cursor:pointer;padding:7px 16px;border-radius:100px;border:none;font-family:'Poppins',sans-serif;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+.alink-p{color:#fff;background:var(--p);}
+.alink-p:hover{background:#4338ca;}
+.alink-outline{color:var(--text2);background:#fff;border:1.5px solid var(--border-mid);}
+.alink-outline:hover{border-color:var(--p);color:var(--p);}
+.alink-g{color:#fff;background:var(--green);}
+.alink-d{color:var(--dim);background:var(--bg);border:1px solid var(--border);}
+
+/* CLOSED OVERLAY */
+.closed-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;border-radius:var(--radius);}
+.closed-label{font-size:12px;font-weight:700;color:var(--muted);padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:100px;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">H8</div>
+    <div class="logo-text">HRM<span>8</span></div>
+  </div>
+  <div class="vendor-chip">
+    <div class="vendor-id">VENDOR · #0047</div>
+    <div class="vendor-name">Vendor #0047</div>
+    <div class="vendor-status"><div class="dot"></div><span>Active · Stryker Portal</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <a href="vendor-dashboard.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="jobs-list.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      Job Invitations
+      <span class="nav-badge a">3</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+      My Candidates
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Billing</div>
+    <a href="timesheet.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Timesheets
+      <span class="nav-badge a">2</span>
+    </a>
+    <a href="invoices.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Invoices
+      <span class="nav-badge a">1</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Documents
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Account</div>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="footer-user">
+      <div class="user-avatar">V47</div>
+      <div class="user-info">
+        <div class="user-name">Vendor #0047</div>
+        <div class="user-role">Account Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="top-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>Vendor Portal</span><span class="sep">/</span>
+        <span style="color:var(--text);font-weight:600;">Job Invitations</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar-btn">V47</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="ph-left">
+        <h1>Job Invitations</h1>
+        <p>Positions published to Vendor #0047 by Stryker · Submit your best candidates before the deadline</p>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="stat-pill">
+        <div class="sp-val" style="color:var(--amber);">3</div>
+        <div class="sp-lbl">New Invitations</div>
+      </div>
+      <div class="stat-pill">
+        <div class="sp-val" style="color:var(--p);">2</div>
+        <div class="sp-lbl">Actively Submitting</div>
+      </div>
+      <div class="stat-pill">
+        <div class="sp-val" style="color:var(--green);">12</div>
+        <div class="sp-lbl">Total CVs Submitted</div>
+      </div>
+      <div class="stat-pill">
+        <div class="sp-val" style="color:var(--text);">7</div>
+        <div class="sp-lbl">Shortlisted by Stryker</div>
+      </div>
+      <div class="stat-pill">
+        <div class="sp-val" style="color:var(--dim);">3</div>
+        <div class="sp-lbl">Closed / Filled</div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search roles, skills…">
+      </div>
+      <div class="filter-sep"></div>
+      <span style="font-size:11.5px;font-weight:600;color:var(--dim);">Type:</span>
+      <div class="filter-chip active">All</div>
+      <div class="filter-chip">Contract</div>
+      <div class="filter-chip">FTE</div>
+      <div class="filter-sep"></div>
+      <span style="font-size:11.5px;font-weight:600;color:var(--dim);">Status:</span>
+      <div class="filter-chip">New</div>
+      <div class="filter-chip">Submitting</div>
+      <div class="filter-chip">Closed</div>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm">Sort: Deadline ▾</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active">All <span class="tc tc-p">8</span></div>
+      <div class="tab">New Invitations <span class="tc tc-a">3</span></div>
+      <div class="tab">Submitting <span class="tc tc-p">2</span></div>
+      <div class="tab">Shortlisted <span class="tc tc-g">2</span></div>
+      <div class="tab">Closed <span class="tc tc-d">3</span></div>
+    </div>
+
+    <!-- JOBS GRID -->
+    <div class="jobs-grid">
+
+      <!-- CARD 1: URGENT — New invite, deadline soon -->
+      <div class="job-card new-invite urgent">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">AI / Data Science</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-urgent">⚡ Urgent</span>
+        </div>
+        <div class="job-title">ML Engineer</div>
+        <div class="job-tags">
+          <span class="job-tag tag-contract">Contract · 6 months</span>
+          <span class="job-tag tag-exp">4–8 yrs</span>
+          <span class="job-tag tag-loc">📍 Pune</span>
+          <span class="job-tag tag-skill">Python</span>
+          <span class="job-tag tag-skill">TensorFlow</span>
+        </div>
+        <div class="job-description">
+          Stryker's AI team is hiring an ML Engineer to work on surgical robotics prediction models. Strong ML pipeline experience required.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Posted Apr 20
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            2 positions open
+          </div>
+          <div class="jm-item" style="color:var(--red);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Deadline: Apr 28 (6 days)
+          </div>
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count" style="color:var(--amber);">1 / 5</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:20%;background:var(--amber);"></div></div>
+          <div class="sub-deadline" style="color:var(--red);">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Submit 4 more CVs by Apr 28 · Only 6 days left
+          </div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left">First come, first served · <strong>4 other vendors</strong></div>
+          <a href="job-detail.html" class="alink alink-p">Submit CVs →</a>
+        </div>
+      </div>
+
+      <!-- CARD 2: ACTIVE SUBMITTING -->
+      <div class="job-card active-sub">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">Platform Engineering</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-active">● Submitting</span>
+        </div>
+        <div class="job-title">Cloud Infrastructure Engineer</div>
+        <div class="job-tags">
+          <span class="job-tag tag-contract">Contract · 12 months</span>
+          <span class="job-tag tag-exp">5–10 yrs</span>
+          <span class="job-tag tag-loc">📍 Mumbai / Remote</span>
+          <span class="job-tag tag-skill">AWS</span>
+          <span class="job-tag tag-skill">Terraform</span>
+          <span class="job-tag tag-skill">K8s</span>
+        </div>
+        <div class="job-description">
+          Seeking a cloud infrastructure expert to architect and maintain Stryker's global data platform on AWS. Terraform and Kubernetes proficiency required.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Posted Apr 15
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            1 position open
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Deadline: Apr 30
+          </div>
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count" style="color:var(--green);">2 / 3</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:67%;background:var(--green);"></div></div>
+          <div class="sub-deadline">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            1 more CV slot available · Submit before Apr 30
+          </div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left">1 shortlisted so far · <strong>Rajesh Kumar</strong></div>
+          <a href="job-detail.html" class="alink alink-p">Submit CV →</a>
+        </div>
+      </div>
+
+      <!-- CARD 3: NEW INVITE — FTE -->
+      <div class="job-card new-invite new">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">Product</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-new">★ New Invite</span>
+        </div>
+        <div class="job-title">Senior Product Manager</div>
+        <div class="job-tags">
+          <span class="job-tag tag-fte">FTE · Permanent</span>
+          <span class="job-tag tag-exp">6–12 yrs</span>
+          <span class="job-tag tag-loc">📍 Bangalore</span>
+          <span class="job-tag tag-skill">Product Strategy</span>
+          <span class="job-tag tag-skill">MedTech</span>
+        </div>
+        <div class="job-description">
+          Stryker is looking for a Senior PM to lead product development for their surgical instruments platform. MedTech domain experience preferred.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Posted Apr 22
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            2 positions open
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Deadline: May 5
+          </div>
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count" style="color:var(--muted);">0 / 4</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:0%;background:var(--p);"></div></div>
+          <div class="sub-deadline">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            No CVs submitted yet · Deadline May 5 (13 days)
+          </div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left">First come, first served · <strong>6 other vendors</strong></div>
+          <a href="job-detail.html" class="alink alink-p">Submit CVs →</a>
+        </div>
+      </div>
+
+      <!-- CARD 4: SHORTLISTED / IN PIPELINE -->
+      <div class="job-card active-sub">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">Engineering</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-active">● In Pipeline</span>
+        </div>
+        <div class="job-title">Senior Frontend Developer</div>
+        <div class="job-tags">
+          <span class="job-tag tag-contract">Contract · 6 months</span>
+          <span class="job-tag tag-exp">4–8 yrs</span>
+          <span class="job-tag tag-loc">📍 Pune / Remote</span>
+          <span class="job-tag tag-skill">React</span>
+          <span class="job-tag tag-skill">TypeScript</span>
+        </div>
+        <div class="job-description">
+          Frontend engineer needed for Stryker's internal enterprise tools team. Must have 4+ years of React and TypeScript in production-scale applications.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Posted Apr 8
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            1 position open
+          </div>
+          <div class="jm-item" style="color:var(--green);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Submission closed
+          </div>
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count" style="color:var(--green);">3 / 3</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:100%;background:var(--green);"></div></div>
+          <div class="sub-deadline" style="color:var(--green);">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Submission complete · 2 shortlisted by Stryker (Arjun, Priya)
+          </div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left"><strong>Priya Nair</strong> — Interview R1 scheduled</div>
+          <a href="job-detail.html" class="alink alink-outline">Track Status →</a>
+        </div>
+      </div>
+
+      <!-- CARD 5: NEW — Contract Backend -->
+      <div class="job-card new-invite new">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">Backend / API</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-new">★ New Invite</span>
+        </div>
+        <div class="job-title">Backend API Developer</div>
+        <div class="job-tags">
+          <span class="job-tag tag-contract">Contract · 9 months</span>
+          <span class="job-tag tag-exp">3–7 yrs</span>
+          <span class="job-tag tag-loc">📍 Chennai</span>
+          <span class="job-tag tag-skill">Node.js</span>
+          <span class="job-tag tag-skill">PostgreSQL</span>
+          <span class="job-tag tag-skill">REST</span>
+        </div>
+        <div class="job-description">
+          Build and maintain RESTful APIs for Stryker's healthcare data platform. Experience with microservices architecture and healthcare data standards (HL7/FHIR) preferred.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Posted Apr 21
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            3 positions open
+          </div>
+          <div class="jm-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Deadline: May 3
+          </div>
+        </div>
+        <div class="dup-warning">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Duplicate check enabled — system will flag if candidate was already submitted by another vendor
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count" style="color:var(--muted);">0 / 5</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:0%;background:var(--p);"></div></div>
+          <div class="sub-deadline">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            No CVs submitted yet · 5 slots available
+          </div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left">First come, first served · <strong>3 other vendors</strong></div>
+          <a href="job-detail.html" class="alink alink-p">Submit CVs →</a>
+        </div>
+      </div>
+
+      <!-- CARD 6: CLOSED -->
+      <div class="job-card closed" style="pointer-events:none;">
+        <div class="job-card-top">
+          <div class="job-client">
+            <div class="client-logo">STR</div>
+            <div class="client-info">
+              <div class="ci-name">Stryker India</div>
+              <div class="ci-dept">DevOps</div>
+            </div>
+          </div>
+          <span class="job-status-pill sp-closed">Filled</span>
+        </div>
+        <div class="job-title">DevOps Lead</div>
+        <div class="job-tags">
+          <span class="job-tag tag-contract">Contract</span>
+          <span class="job-tag tag-exp">7–12 yrs</span>
+          <span class="job-tag tag-loc">📍 Pune</span>
+        </div>
+        <div class="job-description">
+          Senior DevOps lead for Stryker's cloud migration project.
+        </div>
+        <div class="job-meta-row">
+          <div class="jm-item">Posted Apr 1</div>
+          <div class="jm-item" style="color:var(--green);">✓ Position filled</div>
+        </div>
+        <div class="job-submission-section">
+          <div class="sub-row">
+            <span class="sub-label">Your Submissions</span>
+            <span class="sub-count">2 / 3</span>
+          </div>
+          <div class="progress-bar"><div class="pb-fill" style="width:67%;background:var(--dim);"></div></div>
+          <div class="sub-deadline" style="color:var(--green);">✓ Rajesh Kumar — Hired by Stryker</div>
+        </div>
+        <div class="job-footer">
+          <div class="jf-left">Position filled · 1 of your candidates was hired</div>
+          <button class="alink alink-d" disabled>Closed</button>
+        </div>
+        <div class="closed-overlay"><div class="closed-label">Position Filled</div></div>
+      </div>
+
+    </div><!-- end jobs-grid -->
+  </div>
+</div>
+</body>
+</html>

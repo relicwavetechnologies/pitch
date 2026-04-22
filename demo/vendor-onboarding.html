@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM8 — Vendor Onboarding</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root {
+  --bg:#f4f5fb; --card:#ffffff;
+  --p:#4f46e5; --p-light:rgba(79,70,229,0.08); --p-mid:rgba(79,70,229,0.15); --p2:#6366f1;
+  --blue:#3b82f6; --cyan:#06b6d4; --green:#10b981; --amber:#f59e0b; --red:#ef4444;
+  --text:#0f172a; --text2:#334155; --dim:#64748b; --muted:#94a3b8;
+  --border:#e2e8f0; --border-mid:#cbd5e1;
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow:0 4px 12px rgba(15,23,42,0.07),0 1px 3px rgba(15,23,42,0.04);
+  --shadow-lg:0 16px 48px rgba(15,23,42,0.1);
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.top-bar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);}
+.logo-text span{color:var(--p);}
+.top-bar-right{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:8px;}
+.top-bar-right a{color:var(--p);font-weight:600;text-decoration:none;}
+
+/* MAIN WRAPPER */
+.main-wrap{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:32px 24px;}
+.form-container{width:100%;max-width:860px;}
+
+/* HERO */
+.form-hero{text-align:center;margin-bottom:32px;}
+.form-hero-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.2);font-size:11.5px;font-weight:600;margin-bottom:12px;}
+.form-hero h1{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-0.8px;margin-bottom:6px;}
+.form-hero p{font-size:13.5px;color:var(--dim);max-width:500px;margin:0 auto;line-height:1.6;}
+
+/* STEP INDICATOR */
+.step-bar{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:30px;}
+.step-item{display:flex;align-items:center;gap:8px;}
+.step-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all 0.3s;font-family:'JetBrains Mono',monospace;}
+.step-label{font-size:11.5px;font-weight:600;color:var(--muted);}
+.step-item.done .step-circle{background:var(--green);border-color:var(--green);color:#fff;}
+.step-item.done .step-label{color:var(--green);}
+.step-item.active .step-circle{background:var(--p);border-color:var(--p);color:#fff;}
+.step-item.active .step-label{color:var(--p);}
+.step-line{width:60px;height:2px;background:var(--border);margin:0 6px;}
+.step-line.done{background:var(--green);}
+.step-line.active{background:var(--p);}
+
+/* CARD */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;margin-bottom:24px;}
+.card-header{padding:20px 28px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--p-light),rgba(99,102,241,0.03));}
+.card-header-num{font-size:10px;font-weight:700;color:var(--p);letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.card-header-title{font-size:17px;font-weight:700;color:var(--text);}
+.card-header-sub{font-size:12.5px;color:var(--dim);margin-top:2px;}
+.card-body{padding:24px 28px;}
+
+/* FORM ELEMENTS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.form-group:last-child{margin-bottom:0;}
+.form-label{font-size:11.5px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:5px;}
+.required{color:var(--red);}
+.form-input{border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);outline:none;transition:all 0.15s;width:100%;}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--p-light);}
+.form-input::placeholder{color:var(--muted);}
+.form-input.generated{background:rgba(16,185,129,0.04);border-color:rgba(16,185,129,0.3);font-family:'JetBrains Mono',monospace;font-size:12px;color:#059669;font-weight:600;}
+.form-select{border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);outline:none;width:100%;background:var(--card);cursor:pointer;}
+.form-select:focus{border-color:var(--p);}
+.form-textarea{border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);outline:none;resize:none;width:100%;line-height:1.6;}
+.form-textarea:focus{border-color:var(--p);}
+.form-textarea::placeholder{color:var(--muted);}
+.input-prefix{display:flex;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;transition:all 0.15s;}
+.input-prefix:focus-within{border-color:var(--p);box-shadow:0 0 0 3px var(--p-light);}
+.input-prefix-label{background:var(--bg);padding:10px 12px;font-size:12px;color:var(--muted);font-weight:600;border-right:1.5px solid var(--border);white-space:nowrap;}
+.input-prefix input{flex:1;border:none;outline:none;padding:10px 12px;font-size:13px;font-family:'Poppins',sans-serif;color:var(--text);}
+
+/* HINT */
+.form-hint{font-size:10.5px;color:var(--muted);margin-top:3px;}
+
+/* SECTION DIVIDER */
+.section-divider{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin:20px 0 12px;display:flex;align-items:center;gap:10px;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* EXPERTISE CHIPS */
+.expertise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.exp-chip{border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
+.exp-chip:hover{border-color:var(--p);background:var(--p-light);}
+.exp-chip.selected{border-color:var(--p);background:var(--p-light);}
+.exp-chip-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#fff;}
+.exp-chip.selected .exp-chip-check{background:var(--p);border-color:var(--p);}
+.exp-chip-label{font-size:12px;font-weight:600;color:var(--text2);}
+.exp-chip.selected .exp-chip-label{color:var(--p);}
+
+/* EMPLOYMENT TYPE TOGGLE */
+.emp-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.emp-opt{border:1.5px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;transition:all 0.15s;text-align:center;}
+.emp-opt:hover{border-color:var(--p);}
+.emp-opt.selected{border-color:var(--p);background:var(--p-light);}
+.emp-opt-label{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:2px;}
+.emp-opt.selected .emp-opt-label{color:var(--p);}
+.emp-opt-sub{font-size:10.5px;color:var(--muted);}
+
+/* DOCUMENT UPLOAD */
+.doc-upload-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.doc-item{border:1.5px dashed var(--border);border-radius:9px;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s;}
+.doc-item:hover{border-color:var(--p);background:var(--p-light);}
+.doc-item.uploaded{border-style:solid;border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.04);}
+.doc-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.doc-label{font-size:12px;font-weight:600;color:var(--text2);}
+.doc-sub{font-size:10px;color:var(--muted);}
+.doc-item.uploaded .doc-label{color:#059669;}
+
+/* TERMS */
+.terms-box{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px 16px;margin-bottom:16px;}
+.terms-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.terms-text{font-size:11.5px;color:var(--dim);line-height:1.7;}
+.checkbox-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;}
+.cb{width:17px;height:17px;border-radius:4px;border:2px solid var(--p);background:var(--p-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;cursor:pointer;}
+.cb-label{font-size:12.5px;color:var(--text2);line-height:1.5;}
+.cb-label a{color:var(--p);text-decoration:none;font-weight:600;}
+
+/* FOOTER ACTIONS */
+.form-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s;}
+.btn-primary{background:var(--p);color:#fff;}
+.btn-primary:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+.btn-outline{background:#fff;color:var(--text2);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--p);color:var(--p);}
+.btn-ghost{background:transparent;color:var(--dim);padding:10px 16px;}
+.save-chip{font-size:11px;color:var(--dim);display:flex;align-items:center;gap:5px;}
+.save-chip svg{color:var(--green);}
+
+/* SUCCESS STATE */
+.success-state{display:none;text-align:center;padding:48px 28px;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--green),#34d399);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 32px rgba(16,185,129,0.25);}
+.success-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.success-sub{font-size:13.5px;color:var(--dim);line-height:1.6;max-width:400px;margin:0 auto 24px;}
+.vendor-id-box{background:linear-gradient(135deg,var(--p),var(--p2));border-radius:12px;padding:16px 24px;display:inline-block;margin-bottom:20px;}
+.vid-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.vid-value{font-size:24px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;}
+
+/* SIDE INFO PANEL */
+.page-layout{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;}
+.info-sidebar{display:flex;flex-direction:column;gap:14px;position:sticky;top:90px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.info-card-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.info-item{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid #f1f5f9;align-items:flex-start;}
+.info-item:last-child{border-bottom:none;}
+.info-dot{width:6px;height:6px;border-radius:50%;background:var(--p);flex-shrink:0;margin-top:5px;}
+.info-text{font-size:12px;color:var(--dim);line-height:1.5;}
+.info-text strong{color:var(--text2);}
+
+.process-step{display:flex;gap:10px;align-items:flex-start;padding-bottom:10px;position:relative;}
+.process-step:not(:last-child)::after{content:'';position:absolute;left:11px;top:24px;width:1px;bottom:0;background:var(--border);}
+.ps-num{width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.ps-content{flex:1;}
+.ps-label{font-size:12px;font-weight:600;color:var(--text2);}
+.ps-sub{font-size:10.5px;color:var(--muted);margin-top:1px;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="logo">
+    <div class="logo-mark">H8</div>
+    <div class="logo-text">HRM<span>8</span></div>
+    <span style="font-size:11px;color:var(--muted);margin-left:8px;padding:2px 8px;border-radius:100px;border:1px solid var(--border);">Vendor Onboarding</span>
+  </div>
+  <div class="top-bar-right">
+    Already registered? <a href="vendor-dashboard.html">Sign in →</a>
+  </div>
+</div>
+
+<div class="main-wrap">
+  <div class="form-container">
+
+    <!-- HERO -->
+    <div class="form-hero">
+      <div class="form-hero-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Vendor Partner Registration
+      </div>
+      <h1>Join the Stryker Vendor Network</h1>
+      <p>Register your staffing agency to start receiving job invitations, submitting candidates, and managing placements through the HRM8 vendor portal.</p>
+    </div>
+
+    <!-- STEP BAR -->
+    <div class="step-bar">
+      <div class="step-item done">
+        <div class="step-circle">✓</div>
+        <div class="step-label">Company Details</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item done">
+        <div class="step-circle">✓</div>
+        <div class="step-label">Contact Person</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item active">
+        <div class="step-circle">3</div>
+        <div class="step-label">Expertise</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle">4</div>
+        <div class="step-label">Documents</div>
+      </div>
+    </div>
+
+    <!-- PAGE LAYOUT -->
+    <div class="page-layout">
+      <div>
+
+        <!-- STEP 1: COMPANY DETAILS (Completed) -->
+        <div class="form-card" style="opacity:0.85;">
+          <div class="card-header" style="background:rgba(16,185,129,0.04);border-bottom-color:rgba(16,185,129,0.12);">
+            <div class="card-header-num" style="color:var(--green);">✓ Step 1 — Completed</div>
+            <div class="card-header-title">Company Details</div>
+            <div class="card-header-sub">Your agency information</div>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Company / Agency Name <span class="required">*</span></label>
+                <input class="form-input" value="TechSource Staffing Pvt. Ltd." readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Industry Focus</label>
+                <input class="form-input" value="IT & Engineering Staffing" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">GST Number</label>
+                <input class="form-input" value="27AABCT8821R1ZY" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Company Registration No.</label>
+                <input class="form-input" value="U72900MH2015PTC267811" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Registered Address</label>
+                <input class="form-input" value="Plot 42, Hinjawadi Phase 2, Pune — 411057" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">City / State</label>
+                <input class="form-input" value="Pune, Maharashtra" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: CONTACT PERSON (Completed) -->
+        <div class="form-card" style="opacity:0.85;">
+          <div class="card-header" style="background:rgba(16,185,129,0.04);border-bottom-color:rgba(16,185,129,0.12);">
+            <div class="card-header-num" style="color:var(--green);">✓ Step 2 — Completed</div>
+            <div class="card-header-title">Primary Contact</div>
+            <div class="card-header-sub">Point of contact for Stryker HR communications</div>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Contact Person Name <span class="required">*</span></label>
+                <input class="form-input" value="Neha Desai" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Designation</label>
+                <input class="form-input" value="Account Manager" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Business Email ID <span class="required">*</span></label>
+                <input class="form-input" value="neha.desai@techsource.in" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number <span class="required">*</span></label>
+                <input class="form-input" value="+91 98200 44712" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Secondary Contact (optional)</label>
+                <input class="form-input" value="Rahul Singh · +91 98765 00321" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Billing Email</label>
+                <input class="form-input" value="billing@techsource.in" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: EXPERTISE (ACTIVE) -->
+        <div class="form-card">
+          <div class="card-header">
+            <div class="card-header-num">Step 3 of 4 — In Progress</div>
+            <div class="card-header-title">Sourcing Expertise</div>
+            <div class="card-header-sub">Tell Stryker what types of roles and talent you specialize in</div>
+          </div>
+          <div class="card-body">
+
+            <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;">Employment Types You Support <span class="required">*</span></div>
+            <div class="emp-toggle">
+              <div class="emp-opt selected">
+                <div class="emp-opt-label">Contract / Contractual</div>
+                <div class="emp-opt-sub">Short-term, project-based · SOW + PO based billing</div>
+              </div>
+              <div class="emp-opt selected">
+                <div class="emp-opt-label">FTE (Full-Time Employment)</div>
+                <div class="emp-opt-sub">Permanent hires · Standard hiring pipeline</div>
+              </div>
+            </div>
+
+            <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;">Domain Expertise <span class="required">*</span></div>
+            <div class="expertise-grid">
+              <div class="exp-chip selected">
+                <div class="exp-chip-check">✓</div>
+                <div class="exp-chip-label">Software Engineering</div>
+              </div>
+              <div class="exp-chip selected">
+                <div class="exp-chip-check">✓</div>
+                <div class="exp-chip-label">Data / ML / AI</div>
+              </div>
+              <div class="exp-chip selected">
+                <div class="exp-chip-check">✓</div>
+                <div class="exp-chip-label">DevOps / Cloud</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">Product Management</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">UX / Design</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">QA / Testing</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">Finance / Accounting</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">Sales / Business Dev</div>
+              </div>
+              <div class="exp-chip">
+                <div class="exp-chip-check"></div>
+                <div class="exp-chip-label">MedTech / Healthcare</div>
+              </div>
+            </div>
+
+            <div class="section-divider">Geographic Coverage</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Primary Cities / Regions</label>
+                <input class="form-input" value="Pune, Mumbai, Bangalore" placeholder="e.g. Pune, Mumbai, Delhi NCR">
+                <span class="form-hint">Where you actively source candidates</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Remote Hiring Support</label>
+                <select class="form-select">
+                  <option selected>Yes — Pan-India remote</option>
+                  <option>Yes — Select cities only</option>
+                  <option>No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-divider">Capacity & Track Record</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Active Candidates in Pool</label>
+                <select class="form-select">
+                  <option>Under 50</option>
+                  <option>50–200</option>
+                  <option selected>200–500</option>
+                  <option>500+</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Avg. Time-to-Submit (days)</label>
+                <select class="form-select">
+                  <option>Within 24 hours</option>
+                  <option selected>2–3 days</option>
+                  <option>4–5 days</option>
+                  <option>1 week</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Previous Clients (Optional)</label>
+              <input class="form-input" placeholder="e.g. TCS, Infosys, Wipro, HDFC Bank…" value="Siemens, Honeywell, Philips, HDFC Bank">
+              <span class="form-hint">Helps Stryker assess your enterprise staffing experience</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Additional Notes</label>
+              <textarea class="form-textarea" rows="2" placeholder="Anything else Stryker HR should know about your agency…">Specialized in MedTech and engineering roles. 8+ years of experience in contract staffing across multinational companies.</textarea>
+            </div>
+
+            <div class="form-actions">
+              <div class="save-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Draft auto-saved
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-outline">← Back</button>
+                <button class="btn btn-primary">
+                  Continue to Documents →
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- STEP 4: DOCUMENTS (Upcoming) -->
+        <div class="form-card" style="opacity:0.5;pointer-events:none;">
+          <div class="card-header">
+            <div class="card-header-num">Step 4 — Next</div>
+            <div class="card-header-title">Documents & Verification</div>
+            <div class="card-header-sub">Upload required compliance documents · Complete once Step 3 is saved</div>
+          </div>
+          <div class="card-body">
+            <div class="doc-upload-row">
+              <div class="doc-item uploaded">
+                <div class="doc-icon" style="background:rgba(16,185,129,0.1);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 12 15 15 12 18"/></svg>
+                </div>
+                <div>
+                  <div class="doc-label">✓ GST Certificate</div>
+                  <div class="doc-sub">Uploaded · gst_cert.pdf</div>
+                </div>
+              </div>
+              <div class="doc-item">
+                <div class="doc-icon" style="background:var(--p-light);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <div>
+                  <div class="doc-label">Company Registration</div>
+                  <div class="doc-sub">Upload MCA / ROC certificate</div>
+                </div>
+              </div>
+              <div class="doc-item">
+                <div class="doc-icon" style="background:var(--p-light);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <div>
+                  <div class="doc-label">Bank Account Details</div>
+                  <div class="doc-sub">Cancelled cheque / bank letter</div>
+                </div>
+              </div>
+              <div class="doc-item">
+                <div class="doc-icon" style="background:var(--p-light);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <div>
+                  <div class="doc-label">PAN Card (Company)</div>
+                  <div class="doc-sub">Required for invoicing</div>
+                </div>
+              </div>
+            </div>
+            <div class="terms-box">
+              <div class="terms-title">Terms & Agreement</div>
+              <div class="terms-text">By completing registration, you agree to Stryker's Vendor Code of Conduct, confidentiality obligations, and the HRM8 platform usage terms.</div>
+              <div class="checkbox-row">
+                <div class="cb">✓</div>
+                <div class="cb-label">I agree to <a href="#">Stryker Vendor Terms of Engagement</a> and <a href="#">HRM8 Platform Terms</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUCCESS STATE (shown after final submission) -->
+        <div class="form-card">
+          <div class="success-state" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="success-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="success-title">Registration Submitted!</div>
+            <div class="success-sub">Your vendor application has been submitted to Stryker HR for review. You'll receive your Vendor ID and portal access within 2 business days.</div>
+            <div class="vendor-id-box">
+              <div class="vid-label">Your Vendor ID</div>
+              <div class="vid-value">VENDOR · #0047</div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+              <a href="vendor-dashboard.html" class="btn btn-primary">Go to Vendor Portal →</a>
+              <button class="btn btn-outline">Download Confirmation PDF</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end left -->
+
+      <!-- INFO SIDEBAR -->
+      <div class="info-sidebar">
+
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Why Register?
+          </div>
+          <div class="info-item"><div class="info-dot"></div><div class="info-text">Receive <strong>job invitations directly</strong> from Stryker HR as soon as positions open</div></div>
+          <div class="info-item"><div class="info-dot"></div><div class="info-text">Submit CVs through the portal — <strong>no more email chains</strong></div></div>
+          <div class="info-item"><div class="info-dot"></div><div class="info-text">Track candidate status in real time across all rounds</div></div>
+          <div class="info-item"><div class="info-dot"></div><div class="info-text">Manage <strong>timesheets, invoices, and SOWs</strong> in one place</div></div>
+          <div class="info-item"><div class="info-dot"></div><div class="info-text">Structured billing — timesheet → invoice → payment (Net 60–90)</div></div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            How It Works
+          </div>
+          <div class="process-step">
+            <div class="ps-num">1</div>
+            <div class="ps-content">
+              <div class="ps-label">Register & Get Approved</div>
+              <div class="ps-sub">Stryker HR reviews · 2 business days</div>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="ps-num">2</div>
+            <div class="ps-content">
+              <div class="ps-label">Receive Job Invitations</div>
+              <div class="ps-sub">Email + portal notification</div>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="ps-num">3</div>
+            <div class="ps-content">
+              <div class="ps-label">Submit Candidate CVs</div>
+              <div class="ps-sub">Upload, auto-fill, track pipeline</div>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="ps-num">4</div>
+            <div class="ps-content">
+              <div class="ps-label">Interviews & Hiring</div>
+              <div class="ps-sub">CV Review → R1 → R2 → Offer</div>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="ps-num">5</div>
+            <div class="ps-content">
+              <div class="ps-label">Placement & Billing</div>
+              <div class="ps-sub">SOW → PO → Timesheet → Invoice</div>
+            </div>
+          </div>
+          <div class="process-step" style="padding-bottom:0;">
+            <div class="ps-num" style="background:var(--green);">6</div>
+            <div class="ps-content">
+              <div class="ps-label">Payment Received</div>
+              <div class="ps-sub">Net 60–90 · NEFT / RTGS</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" style="background:linear-gradient(135deg,var(--p-light),rgba(99,102,241,0.03));border-color:rgba(79,70,229,0.15);">
+          <div class="info-card-title" style="color:var(--p);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Need Help?
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;">Contact Stryker Vendor Relations:<br><strong>vendor-support@stryker.com</strong><br>+91 20 4918 3000 · Mon–Fri 9–6 IST</div>
+        </div>
+
+      </div><!-- end info-sidebar -->
+    </div><!-- end page-layout -->
+
+  </div>
+</div>
+</body>
+</html>

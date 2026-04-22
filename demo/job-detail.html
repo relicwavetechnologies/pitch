@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM8 Vendor Portal — ML Engineer · Stryker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root {
+  --bg:#f4f5fb; --card:#ffffff; --sidebar:#ffffff;
+  --p:#4f46e5; --p-light:rgba(79,70,229,0.08); --p-mid:rgba(79,70,229,0.15); --p2:#6366f1;
+  --blue:#3b82f6; --cyan:#06b6d4; --green:#10b981; --amber:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  --text:#0f172a; --text2:#334155; --dim:#64748b; --muted:#94a3b8;
+  --border:#e2e8f0; --border-mid:#cbd5e1;
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow:0 4px 12px rgba(15,23,42,0.07),0 1px 3px rgba(15,23,42,0.04);
+  --sidebar-w:240px; --header-h:60px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;overflow-y:auto;}
+.sidebar-logo{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.logo-text{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.5px;}
+.logo-text span{color:var(--p);}
+.vendor-chip{margin:12px 12px 4px;padding:10px 12px;background:linear-gradient(135deg,rgba(6,182,212,0.07),rgba(6,182,212,0.03));border:1px solid rgba(6,182,212,0.18);border-radius:10px;}
+.vendor-id{font-size:9px;font-weight:700;color:var(--cyan);letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;}
+.vendor-name{font-size:12px;font-weight:600;color:var(--text2);margin-top:2px;}
+.vendor-status{display:flex;align-items:center;gap:5px;margin-top:4px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.vendor-status span{font-size:10px;color:var(--dim);}
+.nav-section{padding:6px 10px;}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 8px 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--dim);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.nav-item:hover{background:#f8f9ff;color:var(--text2);}
+.nav-item.active{background:var(--p-light);color:var(--p);font-weight:600;}
+.nav-item svg{flex-shrink:0;width:16px;height:16px;}
+.nav-badge{margin-left:auto;background:var(--p);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;font-family:'JetBrains Mono',monospace;}
+.nav-badge.a{background:var(--amber);}
+.nav-badge.g{background:var(--green);}
+.nav-badge.u{background:#f1f5f9;color:var(--muted);border:1px solid var(--border-mid);letter-spacing:.2px;}
+.nav-item.soon{opacity:.5;pointer-events:none;cursor:default;}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+.footer-user{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;}
+.user-avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.user-info .user-name{font-size:12px;font-weight:600;color:var(--text);}
+.user-info .user-role{font-size:10px;color:var(--muted);}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.top-header{height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:50;}
+.breadcrumb{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.breadcrumb .sep{color:var(--border-mid);}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--p);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff;}
+.avatar-btn{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--p),var(--p2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer;font-family:'JetBrains Mono',monospace;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:all 0.2s;text-decoration:none;}
+.btn-primary{background:var(--p);color:#fff;}
+.btn-primary:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+.btn-outline{background:#fff;color:var(--text2);border:1.5px solid var(--border-mid);}
+.btn-outline:hover{border-color:var(--p);color:var(--p);}
+.btn-sm{padding:5px 13px;font-size:11.5px;}
+.btn-ghost{background:transparent;color:var(--dim);padding:6px 10px;}
+.page-content{padding:22px 26px;flex:1;}
+
+/* SPLIT LAYOUT */
+.split-layout{display:grid;grid-template-columns:1fr 400px;gap:20px;align-items:start;}
+
+/* JOB DETAIL CARD */
+.jd-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+.jd-header{padding:22px 24px;border-bottom:1px solid var(--border);}
+.jd-client-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.jd-client-logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(79,70,229,0.1),rgba(99,102,241,0.06));border:1px solid rgba(79,70,229,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace;}
+.jd-client-info .jci-name{font-size:13px;font-weight:700;color:var(--text);}
+.jd-client-info .jci-dept{font-size:11px;color:var(--muted);}
+.jd-title{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:10px;}
+.jd-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tag{font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:100px;}
+.tag-contract{background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);}
+.tag-exp{background:var(--bg);color:var(--dim);border:1px solid var(--border);}
+.tag-loc{background:var(--bg);color:var(--dim);border:1px solid var(--border);}
+.tag-skill{background:rgba(6,182,212,0.06);color:#0891b2;border:1px solid rgba(6,182,212,0.15);}
+.tag-remote{background:rgba(16,185,129,0.07);color:#059669;border:1px solid rgba(16,185,129,0.18);}
+.jd-meta{display:flex;gap:20px;flex-wrap:wrap;}
+.jm-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--dim);}
+.jm-item svg{width:14px;height:14px;flex-shrink:0;}
+.jm-item strong{color:var(--text2);}
+.jd-body{padding:22px 24px;}
+.section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.jd-prose{font-size:13.5px;color:var(--text2);line-height:1.75;margin-bottom:20px;}
+.req-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.req-item{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--text2);line-height:1.5;}
+.req-dot{width:6px;height:6px;border-radius:50%;background:var(--p);flex-shrink:0;margin-top:6px;}
+.skills-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.skill-tag{font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:8px;background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.15);}
+.skill-tag.secondary{background:var(--bg);color:var(--text2);border:1px solid var(--border);}
+
+/* SUBMISSIONS TABLE (already submitted) */
+.sub-table{margin-top:0;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:8px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg);}
+tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#fafbff;}
+td{padding:10px 14px;font-size:12.5px;color:var(--text2);vertical-align:middle;}
+.c-cell{display:flex;align-items:center;gap:8px;}
+.c-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-cv{background:rgba(148,163,184,0.15);color:var(--dim);border:1px solid rgba(148,163,184,0.2);}
+.b-r1{background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.18);}
+.b-shortlisted{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.2);}
+.b-rejected{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.15);}
+
+/* CV SUBMISSION PANEL */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:sticky;top:76px;}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--p-light),rgba(99,102,241,0.03));}
+.panel-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+.panel-sub{font-size:11px;color:var(--dim);margin-top:2px;}
+.panel-body{padding:18px 20px;}
+
+/* SUBMISSION TRACKER */
+.sub-tracker{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px;}
+.st-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.st-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.st-count{font-size:14px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--amber);}
+.progress-bar{height:7px;background:var(--border-mid);border-radius:100px;overflow:hidden;margin-bottom:7px;}
+.pb-fill{height:100%;border-radius:100px;}
+.st-note{font-size:11px;color:var(--dim);}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border-mid);border-radius:10px;padding:20px;text-align:center;margin-bottom:14px;transition:all 0.2s;cursor:pointer;background:var(--bg);}
+.upload-zone:hover{border-color:var(--p);background:var(--p-light);}
+.upload-icon{width:36px;height:36px;border-radius:10px;background:var(--p-light);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+.upload-title{font-size:13px;font-weight:600;color:var(--text2);}
+.upload-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.upload-note{font-size:10.5px;color:var(--p);margin-top:6px;font-weight:600;}
+
+/* DUPLICATE CHECK ALERT */
+.dup-alert{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:9px;padding:10px 13px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;}
+.dup-text{font-size:11.5px;color:#92400e;line-height:1.5;}
+.dup-text strong{font-weight:700;}
+
+/* FORM */
+.form-section{margin-bottom:16px;}
+.form-section-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.form-autofill-badge{font-size:9px;font-weight:700;padding:1px 7px;border-radius:100px;background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);}
+.form-input{border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:'Poppins',sans-serif;color:var(--text2);outline:none;transition:all 0.15s;background:var(--card);}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--p-light);}
+.form-input.autofilled{background:rgba(16,185,129,0.04);border-color:rgba(16,185,129,0.25);color:var(--text);}
+.form-input::placeholder{color:var(--muted);}
+.form-select{border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:'Poppins',sans-serif;color:var(--text2);outline:none;background:var(--card);cursor:pointer;}
+.form-select:focus{border-color:var(--p);}
+.skills-input{border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;gap:5px;flex-wrap:wrap;min-height:40px;background:var(--card);}
+.skill-chip{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:100px;background:var(--p-light);color:var(--p);display:flex;align-items:center;gap:4px;}
+.skill-chip .del{cursor:pointer;font-size:11px;opacity:0.6;}
+.skill-input-field{border:none;outline:none;font-size:12px;font-family:'Poppins',sans-serif;color:var(--text2);background:transparent;min-width:60px;}
+.form-textarea{border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:'Poppins',sans-serif;color:var(--text2);outline:none;resize:none;width:100%;line-height:1.6;}
+.form-textarea:focus{border-color:var(--p);}
+.form-textarea::placeholder{color:var(--muted);}
+
+/* DISCLAIMER */
+.disclaimer{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--dim);line-height:1.5;margin-bottom:14px;}
+.disclaimer strong{color:var(--text2);}
+
+/* SUBMIT BUTTON */
+.submit-btn{width:100%;padding:12px;background:var(--p);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.submit-btn:hover{background:#4338ca;box-shadow:0 4px 16px rgba(79,70,229,0.3);}
+
+/* DIVIDER */
+.panel-divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* JD SIDEBAR INFO */
+.info-box{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:12px;}
+.ib-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+.ib-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #f1f5f9;}
+.ib-row:last-child{border-bottom:none;}
+.ib-label{color:var(--dim);}
+.ib-val{font-weight:600;color:var(--text);}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">H8</div>
+    <div class="logo-text">HRM<span>8</span></div>
+  </div>
+  <div class="vendor-chip">
+    <div class="vendor-id">VENDOR · #0047</div>
+    <div class="vendor-name">Vendor #0047</div>
+    <div class="vendor-status"><div class="dot"></div><span>Active · Stryker Portal</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <a href="vendor-dashboard.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="jobs-list.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      Job Invitations
+      <span class="nav-badge a">3</span>
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+      My Candidates
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Billing</div>
+    <a href="timesheet.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      Timesheets
+      <span class="nav-badge a">2</span>
+    </a>
+    <a href="invoices.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Invoices
+    </a>
+    <a href="#" class="nav-item soon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Documents
+      <span class="nav-badge u">Soon</span>
+    </a>
+  </div>
+  <div class="sidebar-footer">
+    <div class="footer-user">
+      <div class="user-avatar">V47</div>
+      <div class="user-info">
+        <div class="user-name">Vendor #0047</div>
+        <div class="user-role">Account Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="top-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <a href="jobs-list.html">Job Invitations</a>
+        <span class="sep">/</span>
+        <span style="color:var(--text);font-weight:600;">ML Engineer · Stryker</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="icon-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="avatar-btn">V47</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="split-layout">
+
+      <!-- LEFT: JOB DETAIL -->
+      <div>
+        <div class="jd-card">
+          <div class="jd-header">
+            <div class="jd-client-row">
+              <div class="jd-client-logo">STR</div>
+              <div class="jd-client-info">
+                <div class="jci-name">Stryker India Pvt. Ltd.</div>
+                <div class="jci-dept">AI / Data Science Division</div>
+              </div>
+              <div style="margin-left:auto;display:flex;gap:7px;">
+                <span style="font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.15);">⚡ Urgent · 6 days left</span>
+              </div>
+            </div>
+            <div class="jd-title">Machine Learning Engineer</div>
+            <div class="jd-tags">
+              <span class="tag tag-contract">Contract · 6 months</span>
+              <span class="tag tag-exp">4–8 yrs experience</span>
+              <span class="tag tag-loc">📍 Pune, Maharashtra</span>
+              <span class="tag tag-remote">Remote-friendly</span>
+              <span class="tag tag-skill">Python</span>
+              <span class="tag tag-skill">TensorFlow</span>
+              <span class="tag tag-skill">MLOps</span>
+            </div>
+            <div class="jd-meta">
+              <div class="jm-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <strong>Posted:</strong>&nbsp;Apr 20, 2026
+              </div>
+              <div class="jm-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <strong>Openings:</strong>&nbsp;2 positions
+              </div>
+              <div class="jm-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <strong>Rate:</strong>&nbsp;₹2,800–₹3,400/hr
+              </div>
+              <div class="jm-item" style="color:var(--red);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <strong>Deadline:</strong>&nbsp;Apr 28, 2026
+              </div>
+            </div>
+          </div>
+
+          <div class="jd-body">
+            <div class="section-title">About the Role</div>
+            <div class="jd-prose">
+              Stryker's AI & Data Science team is building next-generation prediction models for surgical robotics and medical device performance optimization. We are looking for an experienced ML Engineer to join a cross-functional team and own the end-to-end ML pipeline — from data ingestion through model training, evaluation, and deployment.
+            </div>
+
+            <div class="section-title">Key Responsibilities</div>
+            <div class="req-list">
+              <div class="req-item"><div class="req-dot"></div><div>Design and implement ML pipelines for real-time inference on surgical data streams</div></div>
+              <div class="req-item"><div class="req-dot"></div><div>Build and maintain feature stores and data preprocessing workflows at scale</div></div>
+              <div class="req-item"><div class="req-dot"></div><div>Collaborate with domain experts to translate clinical requirements into model objectives</div></div>
+              <div class="req-item"><div class="req-dot"></div><div>Set up MLOps practices: model versioning, A/B testing, drift monitoring, retraining pipelines</div></div>
+              <div class="req-item"><div class="req-dot"></div><div>Deploy and monitor models in production using cloud-native infrastructure (AWS SageMaker)</div></div>
+            </div>
+
+            <div class="section-title">Requirements</div>
+            <div class="req-list">
+              <div class="req-item"><div class="req-dot" style="background:var(--amber);"></div><div>4–8 years of hands-on ML engineering experience (not just data science)</div></div>
+              <div class="req-item"><div class="req-dot" style="background:var(--amber);"></div><div>Strong Python — NumPy, Pandas, Scikit-learn, TensorFlow or PyTorch</div></div>
+              <div class="req-item"><div class="req-dot" style="background:var(--amber);"></div><div>Experience with MLflow, Weights & Biases, or similar MLOps tooling</div></div>
+              <div class="req-item"><div class="req-dot" style="background:var(--amber);"></div><div>AWS or GCP certifications preferred; SageMaker experience is a strong plus</div></div>
+              <div class="req-item"><div class="req-dot" style="background:var(--amber);"></div><div>Healthcare or regulated industry experience is a significant advantage</div></div>
+            </div>
+
+            <div class="section-title">Required Skills</div>
+            <div class="skills-grid">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">TensorFlow</span>
+              <span class="skill-tag">PyTorch</span>
+              <span class="skill-tag">MLOps</span>
+              <span class="skill-tag">AWS SageMaker</span>
+              <span class="skill-tag">MLflow</span>
+              <span class="skill-tag secondary">Scikit-learn</span>
+              <span class="skill-tag secondary">SQL</span>
+              <span class="skill-tag secondary">Docker</span>
+              <span class="skill-tag secondary">Kubernetes</span>
+              <span class="skill-tag secondary">HL7/FHIR (nice to have)</span>
+            </div>
+
+            <!-- SUBMITTED CVs TABLE -->
+            <div style="height:1px;background:var(--border);margin:20px 0;"></div>
+            <div class="section-title">Your Submitted Candidates</div>
+            <div class="sub-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Candidate</th>
+                    <th>Experience</th>
+                    <th>Submitted</th>
+                    <th>Stage</th>
+                    <th>Stryker Feedback</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="c-cell">
+                        <div class="c-av" style="background:rgba(16,185,129,0.1);color:var(--green);">MS</div>
+                        <div>
+                          <div style="font-weight:600;font-size:12.5px;color:var(--text);">Mihir Shah</div>
+                          <div style="font-size:10.5px;color:var(--muted);">C-1047-MS</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;">4 yrs · Python, TF</td>
+                    <td style="font-size:11.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Apr 21</td>
+                    <td><span class="badge b-cv">CV Review</span></td>
+                    <td style="font-size:11.5px;color:var(--muted);">Awaiting review</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="c-cell">
+                        <div class="c-av" style="background:rgba(79,70,229,0.1);color:var(--p);">AP</div>
+                        <div>
+                          <div style="font-weight:600;font-size:12.5px;color:var(--text);">Ananya Patel</div>
+                          <div style="font-size:10.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Duplicate detected ⚠</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;">6 yrs · MLOps</td>
+                    <td style="font-size:11.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Apr 21</td>
+                    <td><span class="badge" style="background:rgba(245,158,11,0.08);color:#b45309;border:1px solid rgba(245,158,11,0.2);">⚠ Duplicate</span></td>
+                    <td style="font-size:11px;color:var(--amber);">Already submitted by Vendor #0031 — under review</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SUBMISSION PANEL -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M3 21v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1"/></svg>
+            Submit a Candidate
+          </div>
+          <div class="panel-sub">Upload CV · Details auto-extract from document</div>
+        </div>
+
+        <div class="panel-body">
+
+          <!-- SUBMISSION TRACKER -->
+          <div class="sub-tracker">
+            <div class="st-row">
+              <span class="st-label">Your Submissions</span>
+              <span class="st-count">1 / 5 CVs submitted</span>
+            </div>
+            <div class="progress-bar"><div class="pb-fill" style="width:20%;background:var(--amber);"></div></div>
+            <div class="st-note">4 slots remaining · Deadline: Apr 28, 2026 (6 days)</div>
+          </div>
+
+          <!-- UPLOAD ZONE -->
+          <div class="upload-zone">
+            <div class="upload-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--p)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="upload-title">Drop CV here or click to browse</div>
+            <div class="upload-sub">PDF, DOCX · Max 5MB per file</div>
+            <div class="upload-note">✨ Candidate details auto-extracted from CV</div>
+          </div>
+
+          <!-- DUPLICATE CHECK ALERT -->
+          <div class="dup-alert">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div class="dup-text"><strong>Duplicate Check Enabled.</strong> If this candidate has already been submitted by another vendor, you'll be notified. First submission takes priority unless HR overrides.</div>
+          </div>
+
+          <!-- AUTO-FILLED CANDIDATE DETAILS -->
+          <div class="form-section">
+            <div class="form-section-title">
+              Candidate Details
+              <span class="form-autofill-badge">✨ Auto-filled from CV</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input class="form-input autofilled" value="Ravi Sharma" placeholder="Full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input class="form-input autofilled" value="ravi.sharma@email.com" placeholder="Email">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone *</label>
+                <input class="form-input autofilled" value="+91 98765 43210" placeholder="Phone">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Experience (yrs)</label>
+                <input class="form-input autofilled" value="5.5 years" placeholder="Years">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Current Location</label>
+                <input class="form-input autofilled" value="Pune, India" placeholder="Location">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notice Period</label>
+                <select class="form-select">
+                  <option>Immediate</option>
+                  <option selected>15 days</option>
+                  <option>30 days</option>
+                  <option>60 days</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKILLS -->
+          <div class="form-section">
+            <div class="form-section-title">
+              Key Skills
+              <span class="form-autofill-badge">✨ Auto-filled</span>
+            </div>
+            <div class="skills-input">
+              <div class="skill-chip">Python<span class="del">×</span></div>
+              <div class="skill-chip">TensorFlow<span class="del">×</span></div>
+              <div class="skill-chip">MLflow<span class="del">×</span></div>
+              <div class="skill-chip">AWS<span class="del">×</span></div>
+              <div class="skill-chip">Docker<span class="del">×</span></div>
+              <input class="skill-input-field" placeholder="Add skill…">
+            </div>
+          </div>
+
+          <!-- EXPECTED RATE -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Expected Rate (₹/hr)</label>
+              <input class="form-input" placeholder="e.g. 3,000" value="3,200">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Work Mode</label>
+              <select class="form-select">
+                <option>Hybrid</option>
+                <option>Remote</option>
+                <option>On-site</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- NOTES TO HR -->
+          <div class="form-group">
+            <label class="form-label">Notes to Stryker HR</label>
+            <textarea class="form-textarea" rows="3" placeholder="Add any relevant context — e.g. candidate's MedTech background, availability, highlights…"></textarea>
+          </div>
+
+          <div class="panel-divider"></div>
+
+          <!-- JD INFO BOX -->
+          <div class="info-box">
+            <div class="ib-title">Position Summary</div>
+            <div class="ib-row"><span class="ib-label">Rate Range</span><span class="ib-val">₹2,800–₹3,400/hr</span></div>
+            <div class="ib-row"><span class="ib-label">Contract Duration</span><span class="ib-val">6 months</span></div>
+            <div class="ib-row"><span class="ib-label">Work Mode</span><span class="ib-val">Hybrid (Pune)</span></div>
+            <div class="ib-row"><span class="ib-label">Pipeline Stages</span><span class="ib-val">CV Review → R1 → R2 → Offer</span></div>
+            <div class="ib-row"><span class="ib-label">Interviews Scheduled By</span><span class="ib-val">Stryker HR + HM</span></div>
+          </div>
+
+          <!-- DISCLAIMER -->
+          <div class="disclaimer">
+            <strong>Submission Policy:</strong> By submitting, you confirm this candidate is available and has provided consent. Duplicate submissions across vendors are flagged — first submission takes priority. Rate must be within the stated range.
+          </div>
+
+          <!-- SUBMIT -->
+          <button class="submit-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Submit Candidate to Stryker
+          </button>
+          <div style="text-align:center;font-size:10.5px;color:var(--muted);margin-top:8px;">
+            Stryker HR will be notified immediately · Expect feedback within 3–5 business days
+          </div>
+
+        </div>
+      </div><!-- end panel -->
+
+    </div><!-- end split-layout -->
+  </div>
+</div>
+</body>
+</html>
