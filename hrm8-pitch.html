@@ -233,7 +233,7 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
     justify-content:flex-start;
   }
   #s0 { justify-content:center !important; }
-  #s2, #s4, #s-lark, #s-rbac { min-height:unset !important; padding-bottom:52px !important; }
+  #s2, #s4, #s-timesheet { min-height:unset !important; padding-bottom:52px !important; }
 
   /* ── Hide desktop chrome ── */
   .nav-dots, .key-hint, .sec-tag { display:none !important; }
@@ -293,11 +293,8 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
   .ss-body img { height:auto !important; max-height:280px !important; object-fit:cover !important; }
   .ss-bar span { font-size:10px !important; }
 
-  /* ── RBAC image taller since it's portrait ── */
-  #s-rbac .ss-body img { height:360px !important; max-height:360px !important; }
-
-  /* ── Lark screenshots — no height cap, show full image ── */
-  #s-lark .ss-body img { height:auto !important; max-height:none !important; object-fit:unset !important; }
+  /* ── Timesheet videos — no height cap, show full asset ── */
+  #s-timesheet .ss-body video, #s-timesheet .ss-body img { height:auto !important; max-height:none !important; object-fit:unset !important; }
 
   /* ── Persona cards ── */
   .persona-card { padding:24px 20px !important; }
@@ -469,10 +466,10 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
     <div class="fu" style="margin-bottom:36px">
       <div style="font-size:12px; font-weight:500; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; font-family:'Inter',sans-serif;">HRM8 ATS</div>
       <h2 class="fu d1" style="font-size:52px; font-weight:700; letter-spacing:-2px; line-height:1.05; margin-bottom:12px">Hiring <span class="grad-text">Reimagined.</span></h2>
-      <p style="font-size:17px; color:var(--dim); font-weight:400; max-width:520px; line-height:1.7; margin-bottom:6px">Three distinct roles. One unified platform. Every persona gets exactly what they need — nothing more.</p>
+      <p style="font-size:17px; color:var(--dim); font-weight:400; max-width:560px; line-height:1.7; margin-bottom:6px">Two distinct roles. One unified platform. Applicants are not standalone users — they come through the supplier and sit under that supplier's pool.</p>
     </div>
 
-    <div class="grid-3">
+    <div class="grid-2" style="align-items:start">
       <!-- HR Admin -->
       <div class="persona-card hr fu d3">
         <div class="persona-icon hr" style="font-size:13px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace">HR</div>
@@ -489,38 +486,54 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
         </div>
       </div>
 
-      <!-- Candidate -->
-      <div class="persona-card candidate fu d4">
-        <div class="persona-icon candidate" style="font-size:13px;font-weight:800;color:var(--amber);font-family:'JetBrains Mono',monospace">CA</div>
-        <span class="pill a" style="margin-bottom:14px; display:inline-flex">Candidate</span>
-        <h3 style="font-size:19px; margin-bottom:10px">The Applicant</h3>
-        <p style="color:var(--dim); font-size:13px; line-height:1.75; margin-bottom:18px">Discovers open roles, applies directly, tracks application status, completes assessments, and communicates with the team.</p>
-        <div style="display:flex; flex-direction:column; gap:7px; font-size:13px; color:var(--text2)">
-          <div style="display:flex; gap:8px"><span style="color:var(--amber)">→</span> Personal candidate dashboard</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--amber)">→</span> Application tracking</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--amber)">→</span> Assessment completion</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--amber)">→</span> Interview self-scheduling</div>
-        </div>
-        <div style="margin-top:16px; padding:9px 13px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:9px; font-size:12px; color:#ef4444; font-weight:600">
-          ↻ Not required in vendor-based model
-        </div>
-      </div>
+      <!-- Supplier column with Applicant nested as a tree child -->
+      <div style="display:flex;flex-direction:column">
 
-      <!-- Vendor -->
-      <div class="persona-card vendor fu d5">
-        <div class="persona-icon vendor" style="font-size:13px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace">VN</div>
-        <span class="pill c" style="margin-bottom:14px; display:inline-flex">Vendor / Staffing Agency</span>
-        <h3 style="font-size:19px; margin-bottom:10px">The Sourcer</h3>
-        <p style="color:var(--dim); font-size:13px; line-height:1.75; margin-bottom:18px">Manages a pool of candidates, submits CVs for open positions, tracks submission status, and communicates with the hiring team.</p>
-        <div style="display:flex; flex-direction:column; gap:7px; font-size:13px; color:var(--text2)">
-          <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Vendor portal & dashboard</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Candidate profile submission</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Real-time status tracking</div>
-          <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> CV upload & management</div>
+        <!-- Vendor / Supplier -->
+        <div class="persona-card vendor fu d4">
+          <div class="persona-icon vendor" style="font-size:13px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace">VN</div>
+          <span class="pill c" style="margin-bottom:14px; display:inline-flex">Vendor / Staffing Agency</span>
+          <h3 style="font-size:19px; margin-bottom:10px">The Supplier</h3>
+          <p style="color:var(--dim); font-size:13px; line-height:1.75; margin-bottom:18px">Maintains a private pool of applicants, submits profiles against client mandates, tracks client decisions, and handles SOWs &amp; invoices. Every applicant lives under the supplier that sourced them — no standalone candidate login.</p>
+          <div style="display:flex; flex-direction:column; gap:7px; font-size:13px; color:var(--text2)">
+            <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Vendor portal &amp; dashboard</div>
+            <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Private applicant pool (owned by supplier)</div>
+            <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Candidate profile &amp; CV submission</div>
+            <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Real-time status tracking on every submission</div>
+            <div style="display:flex; gap:8px"><span style="color:var(--cyan)">→</span> Invoicing &amp; SOW management</div>
+          </div>
         </div>
-        <div style="margin-top:16px; padding:9px 13px; background:rgba(6,182,212,0.07); border:1px solid rgba(6,182,212,0.18); border-radius:9px; font-size:12px; color:var(--cyan); font-weight:600">
-          Your primary customization target
+
+        <!-- Tree branch → Applicant sub-entity -->
+        <div class="fu d5" style="position:relative;margin-left:32px;padding:0 0 0 28px;border-left:2px dashed rgba(6,182,212,0.4)">
+          <!-- Vertical spacer at the top of the branch -->
+          <div style="height:22px"></div>
+          <!-- Horizontal connector tick -->
+          <div style="position:absolute;top:22px;left:-2px;width:24px;border-top:2px dashed rgba(6,182,212,0.4)"></div>
+
+          <div style="background:var(--card);border:1px solid rgba(245,158,11,0.18);border-radius:18px;padding:20px 22px;box-shadow:0 2px 16px rgba(15,23,42,0.05);position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--red))"></div>
+
+            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
+              <div style="width:42px;height:42px;border-radius:11px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--amber);font-family:'JetBrains Mono',monospace;flex-shrink:0">AP</div>
+              <div style="flex:1">
+                <span class="pill a" style="font-size:10px;margin-bottom:6px;display:inline-flex">Sub-entity · Lives under Supplier</span>
+                <h3 style="font-size:17px;margin-top:4px">The Applicant</h3>
+              </div>
+            </div>
+
+            <p style="color:var(--dim);font-size:12px;line-height:1.7;margin-bottom:14px">A profile inside the supplier's private talent pool. The supplier owns the record — adds, updates, and submits it against client mandates. The applicant never logs in.</p>
+
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text2)">
+              <div style="display:flex;gap:8px"><span style="color:var(--amber)">→</span> Stored in the supplier's CV pool</div>
+              <div style="display:flex;gap:8px"><span style="color:var(--amber)">→</span> Submitted by supplier against one or many JDs</div>
+              <div style="display:flex;gap:8px"><span style="color:var(--amber)">→</span> Status tracked on the supplier's dashboard</div>
+              <div style="display:flex;gap:8px"><span style="color:var(--amber)">→</span> Interview coordination handled by supplier</div>
+              <div style="display:flex;gap:8px"><span style="color:var(--amber)">→</span> Placement &amp; billing tied back to the supplier</div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -587,59 +600,50 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
     <h2 class="fu d1">HR Admin Pipeline View</h2>
     <p class="sub fu d2" style="margin-bottom:28px">All candidates in one kanban. Move through screening stages, schedule interviews, make decisions — AI Copilot alongside every step.</p>
 
-    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start">
-      <div class="fl d2">
-        <div class="ss-frame">
+    <!-- Two equal-sized screenshots side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;align-items:start">
+      <div class="fl d2" style="display:flex;flex-direction:column">
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:10px">ALL JOBS · ONE WORKING SURFACE</div>
+        <div class="ss-frame" style="height:360px;display:flex;flex-direction:column">
+          <div class="ss-bar">
+            <div class="ss-dot" style="background:#ef4444"></div>
+            <div class="ss-dot" style="background:#f59e0b"></div>
+            <div class="ss-dot" style="background:#10b981"></div>
+            <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">hrm8 · Jobs</span>
+          </div>
+          <div class="ss-body" style="flex:1;overflow:hidden">
+            <img src="assets/ss-hr-jobs.png" alt="HR Admin Jobs List" style="width:100%;height:100%;object-fit:cover;object-position:top left;display:block">
+          </div>
+        </div>
+      </div>
+
+      <div class="fr d2" style="display:flex;flex-direction:column">
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:10px">DRILL INTO A JOB · PIPELINE KANBAN</div>
+        <div class="ss-frame" style="height:360px;display:flex;flex-direction:column">
           <div class="ss-bar">
             <div class="ss-dot" style="background:#ef4444"></div>
             <div class="ss-dot" style="background:#f59e0b"></div>
             <div class="ss-dot" style="background:#10b981"></div>
             <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">hrm8 · HR Admin Pipeline</span>
           </div>
-          <div class="ss-body">
-            <img src="assets/ss-vendor-directory.png" alt="HR Admin Pipeline" style="width:100%;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div style="display:none;padding:14px;background:var(--bg2)">
-              <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-                <span style="padding:4px 12px;background:var(--p-light);border:1px solid rgba(79,70,229,0.2);border-radius:8px;font-size:11px;color:var(--p);font-weight:600">CV Review  4</span>
-                <span style="padding:4px 12px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.18);border-radius:8px;font-size:11px;color:var(--cyan);font-weight:600">Screening  2</span>
-                <span style="padding:4px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.18);border-radius:8px;font-size:11px;color:var(--amber);font-weight:600">Interview  1</span>
-                <span style="padding:4px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);border-radius:8px;font-size:11px;color:var(--green);font-weight:600">Offer  0</span>
-              </div>
-              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-                <div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px;box-shadow:var(--shadow)">
-                  <div style="font-size:9px;font-weight:800;color:var(--p);margin-bottom:7px;letter-spacing:1px">CV REVIEW</div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px;margin-bottom:5px"><div style="font-size:11px;font-weight:600">Arjun K.</div><div style="font-size:9px;color:var(--muted)">TechRecruit</div></div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px;margin-bottom:5px"><div style="font-size:11px;font-weight:600">Priya J.</div><div style="font-size:9px;color:var(--muted)">HireXpert</div></div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px"><div style="font-size:11px;color:var(--dim)">+2 more</div></div>
-                </div>
-                <div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px;box-shadow:var(--shadow)">
-                  <div style="font-size:9px;font-weight:800;color:var(--cyan);margin-bottom:7px;letter-spacing:1px">SCREENING</div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px;margin-bottom:5px"><div style="font-size:11px;font-weight:600">Sneha M.</div><div style="font-size:9px;color:var(--muted)">TechRecruit</div></div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px"><div style="font-size:11px;font-weight:600">Raj S.</div><div style="font-size:9px;color:var(--muted)">TopTalent</div></div>
-                </div>
-                <div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px;box-shadow:var(--shadow)">
-                  <div style="font-size:9px;font-weight:800;color:var(--amber);margin-bottom:7px;letter-spacing:1px">INTERVIEW</div>
-                  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:7px;padding:8px"><div style="font-size:11px;font-weight:600">Rahul V.</div><div style="font-size:9px;color:var(--muted)">TechRecruit</div></div>
-                </div>
-                <div style="background:#fff;border:1px solid var(--border2);border-radius:10px;padding:10px;box-shadow:var(--shadow)">
-                  <div style="font-size:9px;font-weight:800;color:var(--green);margin-bottom:7px;letter-spacing:1px">OFFER</div>
-                  <div style="color:var(--muted);font-size:11px;text-align:center;padding:14px 0">—</div>
-                </div>
-              </div>
-            </div>
+          <div class="ss-body" style="flex:1;overflow:hidden">
+            <img src="assets/ss-vendor-directory.png" alt="HR Admin Pipeline" style="width:100%;height:100%;object-fit:cover;object-position:top left;display:block">
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="fr d3" style="display:flex;flex-direction:column;gap:12px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace">ADMIN CAPABILITIES</div>
+    <!-- Admin capabilities — full-width 3-column strip below both screenshots -->
+    <div class="fu d3" style="display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace">ADMIN CAPABILITIES</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
         <div style="padding:16px 18px;background:rgba(79,70,229,0.04);border:2px solid rgba(79,70,229,0.18);border-radius:12px">
           <div style="font-size:10px;font-weight:800;color:var(--p);letter-spacing:1.5px;margin-bottom:10px">PIPELINE MANAGEMENT</div>
           <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
             <div>✓ Kanban view across all stages</div>
             <div>✓ Move candidates between rounds</div>
-            <div>✓ Interview scheduling & scorecards</div>
-            <div>✓ Offer management & e-signature</div>
+            <div>✓ Interview scheduling &amp; scorecards</div>
+            <div>✓ Offer management &amp; e-signature</div>
             <div>✓ AI Copilot for every action</div>
           </div>
         </div>
@@ -648,7 +652,7 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
           <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
             <div>✓ Full-Time Employment (FTE)</div>
             <div>✓ Contract / Temporary roles</div>
-            <div>✓ Manage FTE & contract from one dashboard</div>
+            <div>✓ Manage FTE &amp; contract from one dashboard</div>
           </div>
         </div>
         <div style="padding:16px 18px;background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.2);border-radius:12px">
@@ -656,13 +660,13 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
           <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text2)">
             <div>✓ Automate stage transitions on score thresholds</div>
             <div>✓ Route candidates to the right reviewer automatically</div>
-            <div>✓ Trigger notifications & tasks per stage</div>
+            <div>✓ Trigger notifications &amp; tasks per stage</div>
             <div>✓ Built for multi-member hiring teams</div>
           </div>
         </div>
-        <div style="padding:12px 16px;background:var(--p-light);border:1px solid rgba(79,70,229,0.2);border-radius:10px;font-size:13px;color:var(--text2);line-height:1.6">
-          <strong style="color:var(--p)">One dashboard</strong> — HR admin sees and manages all open positions, all job types, all candidates in one place.
-        </div>
+      </div>
+      <div style="padding:12px 16px;background:var(--p-light);border:1px solid rgba(79,70,229,0.2);border-radius:10px;font-size:13px;color:var(--text2);line-height:1.6">
+        <strong style="color:var(--p)">One dashboard</strong> — HR admin sees and manages all open positions, all job types, all candidates in one place.
       </div>
     </div>
   </div>
@@ -675,76 +679,112 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
   <div class="sec-tag mono">PLATFORM · 04</div>
   <div style="max-width:1200px; width:100%">
     <div class="accent fu"></div>
-    <h2 class="fu d1">Configurable Hiring Stages</h2>
-    <p class="sub fu d2" style="margin-bottom:32px">Every job gets its own pipeline. Add only the stages your hiring flow actually needs.</p>
+    <h2 class="fu d1">Vendor Pipeline View</h2>
+    <p class="sub fu d2" style="margin-bottom:28px;max-width:720px">Track every candidate from sourcing to placement. Full visibility into client rounds — without leaving your dashboard.</p>
 
     <!-- Legend -->
-    <div class="fu d2" style="display:flex;gap:20px;margin-bottom:16px;align-items:center">
-      <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim)">
-        <div style="width:12px;height:12px;border-radius:3px;background:var(--p);opacity:0.85"></div> Fixed stage
+    <div class="fu d2" style="display:flex;gap:28px;margin-bottom:24px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6b7280">
+        <div style="width:14px;height:14px;border-radius:4px;background:#3b5bfd"></div> Vendor action stage
       </div>
-      <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim)">
-        <div style="width:12px;height:12px;border-radius:3px;border:2px dashed var(--amber);background:rgba(245,158,11,0.08)"></div> Fully customizable — add as many as needed
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6b7280">
+        <div style="width:12px;height:12px;border-radius:4px;border:2px dashed #f59e0b"></div> Client-side tracking (read-only)
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#6b7280">
+        <div style="width:14px;height:14px;border-radius:50%;background:#10b981"></div> Outcome stage
       </div>
     </div>
 
-    <!-- Chevron pipeline -->
-    <div class="pipeline-flow fu d3">
+    <!-- Pipeline -->
+    <div class="fu d3" style="display:flex;align-items:stretch;gap:0;margin-bottom:36px">
 
-      <!-- FIXED: Screening -->
-      <div class="pipe-step active" style="background:rgba(79,70,229,0.07);border-color:rgba(79,70,229,0.3)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <div class="pipe-num" style="color:var(--p)">FIXED</div>
-          <div style="font-size:9px;font-weight:700;color:#fff;background:var(--p);padding:2px 7px;border-radius:20px;letter-spacing:0.5px">LOCKED</div>
+      <!-- Stage 1: Sourcing -->
+      <div style="flex:1;padding:24px 20px;border-radius:14px;background:linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%);border:1.5px solid #c7d2fe;display:flex;flex-direction:column;min-height:180px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#4338ca;text-transform:uppercase">Vendor Action</span>
+          <span style="font-size:10px;font-weight:700;color:#fff;background:#3b5bfd;padding:3px 10px;border-radius:5px;letter-spacing:0.8px;text-transform:uppercase">You</span>
         </div>
-        <div class="pipe-title" style="color:var(--p)">Screening</div>
-        <div class="pipe-desc">Knockout questions, AI resume scoring, pre-screen questionnaires</div>
+        <div style="font-size:19px;font-weight:800;color:#312e81;margin-bottom:8px;letter-spacing:-0.01em">Sourcing</div>
+        <div style="font-size:13px;color:#6b7280;line-height:1.55">Receive JD from client, source candidates from your talent pool, tag &amp; shortlist profiles.</div>
       </div>
 
-      <!-- CUSTOM: example 1 -->
-      <div class="pipe-step" style="background:rgba(245,158,11,0.05);border:1.5px dashed rgba(245,158,11,0.4)">
-        <div class="pipe-num" style="color:var(--amber)">CUSTOM</div>
-        <div class="pipe-title" style="color:var(--amber)">Assessment</div>
-        <div class="pipe-desc">Skills tests, coding challenges, AI-assisted grading</div>
+      <div style="display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;color:#c4c9d4">
+        <svg viewBox="0 0 20 20" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6,4 14,10 6,16"/></svg>
       </div>
 
-      <!-- CUSTOM: expandable indicator -->
-      <div class="pipe-step" style="background:rgba(245,158,11,0.03);border:1.5px dashed rgba(245,158,11,0.3);flex:0.7;justify-content:center;align-items:center;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:22px;color:rgba(245,158,11,0.4);line-height:1">···</div>
-        <div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:0.5px;text-align:center">+ N Rounds</div>
-        <div style="font-size:9px;color:var(--dim);text-align:center;line-height:1.4">background check,<br>culture fit, etc.</div>
-      </div>
-
-      <!-- CUSTOM: example 2 -->
-      <div class="pipe-step" style="background:rgba(245,158,11,0.05);border:1.5px dashed rgba(245,158,11,0.4)">
-        <div class="pipe-num" style="color:var(--amber)">CUSTOM</div>
-        <div class="pipe-title" style="color:var(--amber)">Interview</div>
-        <div class="pipe-desc">1:1, panel, video, or AI-conducted interviews</div>
-      </div>
-
-      <!-- FIXED: Offer -->
-      <div class="pipe-step" style="background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.3)">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <div class="pipe-num" style="color:var(--green)">FIXED</div>
-          <div style="font-size:9px;font-weight:700;color:#fff;background:var(--green);padding:2px 7px;border-radius:20px;letter-spacing:0.5px">LOCKED</div>
+      <!-- Stage 2: Submission -->
+      <div style="flex:1;padding:24px 20px;border-radius:14px;background:linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%);border:1.5px solid #c7d2fe;display:flex;flex-direction:column;min-height:180px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#4338ca;text-transform:uppercase">Vendor Action</span>
+          <span style="font-size:10px;font-weight:700;color:#fff;background:#3b5bfd;padding:3px 10px;border-radius:5px;letter-spacing:0.8px;text-transform:uppercase">You</span>
         </div>
-        <div class="pipe-title" style="color:var(--green)">Offer</div>
-        <div class="pipe-desc">Template-driven, approvals, e-signature → Hired / Rejected</div>
+        <div style="font-size:19px;font-weight:800;color:#312e81;margin-bottom:8px;letter-spacing:-0.01em">Submission</div>
+        <div style="font-size:13px;color:#6b7280;line-height:1.55">Submit candidate profiles with resume, rate card &amp; cover note to the client portal.</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;color:#c4c9d4">
+        <svg viewBox="0 0 20 20" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6,4 14,10 6,16"/></svg>
+      </div>
+
+      <!-- Stage 3: Client Review -->
+      <div style="flex:1;padding:24px 20px;border-radius:14px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1.5px dashed #fbbf24;display:flex;flex-direction:column;min-height:180px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#b45309;text-transform:uppercase">Tracking</span>
+          <span style="font-size:10px;font-weight:700;color:#fff;background:#f59e0b;padding:3px 10px;border-radius:5px;letter-spacing:0.8px;text-transform:uppercase">Client</span>
+        </div>
+        <div style="font-size:19px;font-weight:800;color:#92400e;margin-bottom:8px;letter-spacing:-0.01em">Client Review</div>
+        <div style="font-size:13px;color:#6b7280;line-height:1.55">Track status: Under Review, Shortlisted, or On Hold. Real-time updates from client side.</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;color:#c4c9d4">
+        <svg viewBox="0 0 20 20" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6,4 14,10 6,16"/></svg>
+      </div>
+
+      <!-- Stage 4: Interview Rounds -->
+      <div style="flex:1;padding:24px 20px;border-radius:14px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1.5px dashed #fbbf24;display:flex;flex-direction:column;min-height:180px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#b45309;text-transform:uppercase">Tracking</span>
+          <span style="font-size:10px;font-weight:700;color:#fff;background:#f59e0b;padding:3px 10px;border-radius:5px;letter-spacing:0.8px;text-transform:uppercase">Client</span>
+        </div>
+        <div style="font-size:19px;font-weight:800;color:#92400e;margin-bottom:8px;letter-spacing:-0.01em">Interview Rounds</div>
+        <div style="font-size:13px;color:#6b7280;line-height:1.55">Monitor each round: Technical, Managerial, HR. Live stage indicator per candidate.</div>
+      </div>
+
+      <!-- N-rounds indicator -->
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:64px;flex-shrink:0;text-align:center">
+        <div style="font-size:22px;color:#f59e0b;letter-spacing:3px;line-height:1;margin-bottom:4px">···</div>
+        <div style="font-size:11px;font-weight:600;color:#f59e0b">+ N Rounds</div>
+        <div style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:2px;max-width:65px">as configured by client</div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;color:#c4c9d4">
+        <svg viewBox="0 0 20 20" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="6,4 14,10 6,16"/></svg>
+      </div>
+
+      <!-- Stage 5: Placement -->
+      <div style="flex:1;padding:24px 20px;border-radius:14px;background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%);border:1.5px solid #6ee7b7;display:flex;flex-direction:column;min-height:180px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#047857;text-transform:uppercase">Outcome</span>
+          <span style="font-size:10px;font-weight:700;color:#fff;background:#10b981;padding:3px 10px;border-radius:5px;letter-spacing:0.8px;text-transform:uppercase">Final</span>
+        </div>
+        <div style="font-size:19px;font-weight:800;color:#065f46;margin-bottom:8px;letter-spacing:-0.01em">Placement</div>
+        <div style="font-size:13px;color:#6b7280;line-height:1.55">Offer accepted, start date confirmed. Billing &amp; onboarding details synced to your dashboard.</div>
       </div>
 
     </div>
 
     <!-- Capabilities -->
-    <div style="margin-top:24px" class="fu d4">
+    <div style="margin-top:24px" class="fu d5">
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Gate with pass/fail criteria</div>
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Auto-advance on score thresholds</div>
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Assign scorecards to interviewers</div>
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Drag to reorder custom stages anytime</div>
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Unlimited custom rounds between fixed stages</div>
-        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Only Screening &amp; Offer are fixed — rest is yours</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Multi-job view — manage candidates across all active JDs from one dashboard</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Real-time status sync — see exactly where each candidate is in the client's pipeline</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Bulk candidate upload — attach multiple profiles per job in one go</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">No Google Sheets — replace manual trackers with a single live portal</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Client-configured rounds — interview stages set by client, visible to you automatically</div>
+        <div style="padding:12px 16px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-radius:12px;font-size:13px;color:var(--text2)">Placement tracking — offer status, start dates &amp; billing info in one place</div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -814,10 +854,10 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
   <div style="max-width:1200px; width:100%">
     <div class="accent fu"></div>
     <h2 class="fu d1">Vendor Dashboard</h2>
-    <p class="sub fu d2" style="margin-bottom:28px">Each vendor gets their own portal — submit candidate CVs, manage their pool, and track submission status per role.</p>
+    <p class="sub fu d2" style="margin-bottom:28px;max-width:760px">A dedicated portal for every staffing partner. Clients push JDs with a candidate quota, vendors submit profiles, track client decisions, and handle SOWs &amp; invoicing — all in one workspace.</p>
 
-    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:start">
-      <!-- Vendor mock UI -->
+    <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:28px;align-items:start">
+      <!-- Vendor portal live demo -->
       <div class="fl d2">
         <div class="ss-frame">
           <div class="ss-bar">
@@ -826,182 +866,215 @@ h3 { font-size:17px; font-weight:600; color:var(--text); }
             <div class="ss-dot" style="background:#10b981"></div>
             <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">hrm8 · Vendor Portal</span>
           </div>
+          <div class="ss-body" style="background:#000">
+            <video src="assets/vendor-portal-demo.mov" controls autoplay muted loop playsinline preload="metadata" style="width:100%;display:block;background:#000"></video>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;color:var(--dim);line-height:1.6">Walkthrough of the live Vendor Portal — dashboard, mandate quotas, submission funnel, client activity, invoices &amp; SOWs.</p>
+      </div>
+
+      <!-- Capabilities — explains every section of the portal -->
+      <div class="fr d3" style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--cyan);font-family:'JetBrains Mono',monospace">WHAT THE VENDOR SEES</div>
+
+        <div class="card" style="border-left:3px solid var(--p);padding:14px 16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">1 · KPI strip at the top</div>
+          <div style="color:var(--dim);font-size:12px;line-height:1.55">Active mandates, candidates submitted vs. monthly quota, selection rate, and pending invoice value — the vendor's health check in one glance.</div>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--blue);padding:14px 16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">2 · Submission funnel</div>
+          <div style="color:var(--dim);font-size:12px;line-height:1.55">Sourced → Internal Screen → Submitted → Client Shortlist → Placed. Conversion rate at each step tells the vendor where they're leaking candidates.</div>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--cyan);padding:14px 16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">3 · Active mandates with quotas</div>
+          <div style="color:var(--dim);font-size:12px;line-height:1.55">Every JD the client pushes comes with a candidate quota (e.g. <em>10 profiles for Senior Backend</em>). Progress bars show how many are submitted, how many remain, and days to deadline.</div>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--amber);padding:14px 16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">4 · Client activity feed</div>
+          <div style="color:var(--dim);font-size:12px;line-height:1.55">Live updates from the client side — shortlists, interview scheduling, CV revision requests, invoice approvals — so vendors never have to chase status.</div>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--green);padding:14px 16px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">5 · Invoices &amp; SOWs</div>
+          <div style="color:var(--dim);font-size:12px;line-height:1.55">Raise invoices, track Pending / Overdue / Approved / Paid states, manage MSAs and SOWs with versioning and e-signature — no email back-and-forth.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width flow explanation -->
+    <div class="fu d4" style="margin-top:28px;padding:18px 22px;background:var(--p-light);border:1px solid rgba(79,70,229,0.18);border-radius:14px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:10px">END-TO-END VENDOR FLOW</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;font-size:12px;color:var(--text2);line-height:1.55">
+        <div><strong style="color:var(--p)">① Mandate received</strong><br>Client posts JD + candidate quota to the vendor portal.</div>
+        <div><strong style="color:var(--p)">② Internal screen</strong><br>Vendor sources candidates and runs their own screening first.</div>
+        <div><strong style="color:var(--p)">③ Submission</strong><br>Shortlisted profiles are pushed to the client with CV, rate &amp; note.</div>
+        <div><strong style="color:var(--p)">④ Client review</strong><br>Client picks from vendor's submissions, schedules interviews, decides.</div>
+        <div><strong style="color:var(--p)">⑤ Bill &amp; close</strong><br>On placement, vendor raises invoice against the signed SOW.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE — TIMESHEETS & INVOICING (REPLACES LARK + RBAC)
+══════════════════════════════════════════ -->
+<section id="s-timesheet" style="background:var(--bg);">
+  <div class="sec-tag mono">PLATFORM · 08</div>
+  <div style="max-width:1200px; width:100%; display:flex; flex-direction:column; gap:26px;">
+
+    <!-- Header -->
+    <div class="fu" style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap">
+      <div style="flex:1;min-width:420px">
+        <div class="accent"></div>
+        <h2 class="fu d1">Timesheets &amp; Invoicing</h2>
+        <p class="sub fu d2" style="margin-top:10px;max-width:780px">Vendor submits hours. Client approves. AI compares Submitted vs Approved vs Contract — every rule from MSA → SOW → PO → Work Order is checked before a rupee moves.</p>
+      </div>
+      <div class="fu d3" style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="pill p">Vendor submits</span>
+        <span class="pill a">AI compares</span>
+        <span class="pill g">Client approves</span>
+        <span class="pill c">Locked → Invoice</span>
+      </div>
+    </div>
+
+    <!-- Two videos side by side -->
+    <div class="fu d3" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <!-- Vendor side -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:8px">VENDOR · SUBMIT TIMESHEET</div>
+        <div class="ss-frame">
+          <div class="ss-bar">
+            <div class="ss-dot" style="background:#ef4444"></div>
+            <div class="ss-dot" style="background:#f59e0b"></div>
+            <div class="ss-dot" style="background:#10b981"></div>
+            <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">hrm8 · Vendor Portal — Timesheet</span>
+          </div>
           <div class="ss-body">
-            <img src="assets/ss-vendor-dashboard.png" alt="Vendor Dashboard" style="width:100%;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div style="display:none;width:100%">
-              <div class="mock-header" style="background:var(--bg2)">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div style="width:28px;height:28px;border-radius:7px;background:var(--p-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--p);font-family:'JetBrains Mono',monospace">VN</div>
-                  <span style="font-weight:700;font-size:14px;color:var(--text)">TechRecruit Co.</span>
-                  <span class="pill c" style="font-size:10px">Vendor Portal</span>
-                </div>
-                <div style="padding:6px 14px;background:var(--p);border-radius:100px;font-size:12px;color:#fff;font-weight:600;cursor:pointer">+ Submit CV</div>
-              </div>
-              <div style="padding:10px 18px 8px;font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1.5px;border-bottom:1px solid var(--border2);background:var(--bg2)">SUBMITTED — Senior Frontend Developer</div>
-              <div class="mock-row">
-                <div class="mock-avatar" style="background:rgba(79,70,229,0.1);color:var(--p)">AK</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">Arjun Kapoor</div><div style="font-size:11px;color:var(--dim)">6 yrs · React, TypeScript</div></div>
-                <span class="status-badge" style="background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.2)">In Review</span>
-              </div>
-              <div class="mock-row">
-                <div class="mock-avatar" style="background:rgba(6,182,212,0.1);color:var(--cyan)">SM</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">Sneha Mehta</div><div style="font-size:11px;color:var(--dim)">4 yrs · Vue, Node.js</div></div>
-                <span class="status-badge" style="background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">Shortlisted</span>
-              </div>
-              <div class="mock-row">
-                <div class="mock-avatar" style="background:rgba(79,70,229,0.1);color:var(--p2)">RV</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">Rahul Verma</div><div style="font-size:11px;color:var(--dim)">8 yrs · Full-stack</div></div>
-                <span class="status-badge" style="background:var(--p-light);color:var(--p);border:1px solid rgba(79,70,229,0.2)">Interview</span>
-              </div>
-              <div class="mock-row">
-                <div class="mock-avatar" style="background:rgba(239,68,68,0.08);color:#ef4444">PJ</div>
-                <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">Priya Joshi</div><div style="font-size:11px;color:var(--dim)">3 yrs · React Native</div></div>
-                <span class="status-badge" style="background:rgba(239,68,68,0.08);color:#ef4444;border:1px solid rgba(239,68,68,0.18)">Pending CV</span>
-              </div>
+            <img src="assets/ss-vendor-timesheet.png" alt="Vendor — Submit Timesheet" style="width:100%;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div style="display:none;width:100%;min-height:300px;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--bg2);padding:24px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--p);font-family:'JetBrains Mono',monospace">IMAGE PLACEHOLDER</div>
+              <div style="font-size:11px;color:var(--dim);max-width:280px;text-align:center;line-height:1.5">Export a screenshot of <code style="background:var(--p-light);padding:2px 6px;border-radius:4px;color:var(--p)">vendor-timesheet.html</code> and save as <code style="background:var(--p-light);padding:2px 6px;border-radius:4px;color:var(--p)">assets/ss-vendor-timesheet.png</code></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Capabilities -->
-      <div class="fr d3" style="display:flex;flex-direction:column;gap:12px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--cyan);font-family:'JetBrains Mono',monospace">VENDOR CAPABILITIES</div>
-        <div class="card" style="border-left:3px solid var(--cyan)">
-          <div style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">Candidate Pool Management</div>
-          <div style="color:var(--dim);font-size:13px;line-height:1.6">Maintain reusable candidate profiles. Submit to multiple openings with one click.</div>
-        </div>
-        <div class="card" style="border-left:3px solid var(--green)">
-          <div style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">CV & Profile Submission</div>
-          <div style="color:var(--dim);font-size:13px;line-height:1.6">Upload CVs, attach notes, set skill tags. Every submission lands directly in the HR pipeline.</div>
-        </div>
-        <div class="card" style="border-left:3px solid var(--p)">
-          <div style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">Real-time Status Tracking</div>
-          <div style="color:var(--dim);font-size:13px;line-height:1.6">Vendors see where each candidate stands — In Review, Shortlisted, Interview, Hired, or Rejected.</div>
-        </div>
-        <div class="card" style="border-left:3px solid var(--blue)">
-          <div style="font-weight:700;font-size:14px;margin-bottom:5px;color:var(--text)">Multi-vendor Isolation</div>
-          <div style="color:var(--dim);font-size:13px;line-height:1.6">Each vendor sees only their own submissions. HR sees all vendors in one unified view.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     SLIDE — AI AGENT (LARK)
-══════════════════════════════════════════ -->
-<section id="s-lark" style="background:var(--bg); padding:44px 80px;">
-  <div class="sec-tag mono">UPSELL · AI</div>
-  <div style="max-width:1200px; width:100%; display:flex; flex-direction:column; gap:24px;">
-
-    <!-- Header + features -->
-    <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:40px; align-items:start">
-      <div class="fu">
-        <div style="font-size:11px; font-weight:500; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:10px">Beyond the ATS</div>
-        <h2 class="fu d1" style="font-size:38px; font-weight:700; letter-spacing:-1.5px; line-height:1.1; margin-bottom:10px">Your AI Agent.<br><span class="grad-text">Ask Anything.</span></h2>
-        <p style="font-size:14px; color:var(--dim); line-height:1.65;">A custom AI agent embedded in Lark — answering complex finance, HR &amp; operational queries in plain English. No dashboards. No waiting.</p>
-        <div style="margin-top:14px; padding:10px 14px; background:var(--p-light); border:1px solid rgba(79,70,229,0.15); border-radius:10px; font-size:12px; color:var(--p); font-weight:600;">
-          Plugs into Lark, Slack, Teams, or any chat tool
-        </div>
-      </div>
-      <div class="fu d2" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <div style="padding:11px 13px; background:var(--p-light); border:1px solid rgba(79,70,229,0.18); border-radius:11px;">
-          <div style="font-size:11px; font-weight:700; color:var(--p); margin-bottom:3px;">Invoice Management</div>
-          <div style="font-size:11px; color:var(--dim); line-height:1.45;">"Show all overdue invoices above ₹50,000"</div>
-        </div>
-        <div style="padding:11px 13px; background:rgba(245,158,11,0.07); border:1px solid rgba(245,158,11,0.2); border-radius:11px;">
-          <div style="font-size:11px; font-weight:700; color:#b45309; margin-bottom:3px;">Approval Tracking</div>
-          <div style="font-size:11px; color:var(--dim); line-height:1.45;">"Finance approvals stuck for 3+ days?"</div>
-        </div>
-        <div style="padding:11px 13px; background:rgba(6,182,212,0.07); border:1px solid rgba(6,182,212,0.18); border-radius:11px;">
-          <div style="font-size:11px; font-weight:700; color:#0e7490; margin-bottom:3px;">Meeting &amp; Task Scheduling</div>
-          <div style="font-size:11px; color:var(--dim); line-height:1.45;">"Budget review with finance, Tuesday 11 AM"</div>
-        </div>
-        <div style="padding:11px 13px; background:rgba(16,185,129,0.07); border:1px solid rgba(16,185,129,0.18); border-radius:11px;">
-          <div style="font-size:11px; font-weight:700; color:#065f46; margin-bottom:3px;">Expense &amp; Compliance</div>
-          <div style="font-size:11px; color:var(--dim); line-height:1.45;">"Who hasn't filed their April expense report?"</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Two screenshots side by side -->
-    <div class="fu d3" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <!-- Client side -->
       <div>
-        <div style="font-size:10px; font-weight:700; color:var(--p); letter-spacing:1.5px; font-family:'JetBrains Mono',monospace; margin-bottom:7px;">AI AGENT · LARK</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;color:var(--green);font-family:'JetBrains Mono',monospace;margin-bottom:8px">CLIENT · APPROVE TIMESHEET</div>
         <div class="ss-frame">
           <div class="ss-bar">
             <div class="ss-dot" style="background:#ef4444"></div>
             <div class="ss-dot" style="background:#f59e0b"></div>
             <div class="ss-dot" style="background:#10b981"></div>
+            <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">hrm8 · ATS — Approvals</span>
           </div>
-          <div class="ss-body"><img src="assets/ss-lark-1.png" alt="Lark AI Agent" style="width:100%;display:block;"></div>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:10px; font-weight:700; color:var(--amber); letter-spacing:1.5px; font-family:'JetBrains Mono',monospace; margin-bottom:7px;">INVOICE MANAGEMENT</div>
-        <div class="ss-frame">
-          <div class="ss-bar">
-            <div class="ss-dot" style="background:#ef4444"></div>
-            <div class="ss-dot" style="background:#f59e0b"></div>
-            <div class="ss-dot" style="background:#10b981"></div>
+          <div class="ss-body">
+            <img src="assets/ss-client-timesheet.png" alt="Client — Approve Timesheet" style="width:100%;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div style="display:none;width:100%;min-height:300px;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--bg2);padding:24px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--green);font-family:'JetBrains Mono',monospace">IMAGE PLACEHOLDER</div>
+              <div style="font-size:11px;color:var(--dim);max-width:280px;text-align:center;line-height:1.5">Export a screenshot of <code style="background:rgba(16,185,129,0.1);padding:2px 6px;border-radius:4px;color:var(--green)">client-timesheet.html</code> and save as <code style="background:rgba(16,185,129,0.1);padding:2px 6px;border-radius:4px;color:var(--green)">assets/ss-client-timesheet.png</code></div>
+            </div>
           </div>
-          <div class="ss-body"><img src="assets/ss-lark-2.png" alt="Invoice Management" style="width:100%;display:block;"></div>
         </div>
       </div>
     </div>
 
-  </div>
-</section>
+    <!-- Features + Manual savings + RBAC -->
+    <div class="fu d4" style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start">
 
-<!-- ══════════════════════════════════════════
-     SLIDE — RBAC APPROVAL LAYER
-══════════════════════════════════════════ -->
-<section id="s-rbac" style="background:var(--bg2);">
-  <div class="sec-tag mono">UPSELL · RBAC</div>
-  <div style="max-width:1200px; width:100%; display:grid; grid-template-columns:1fr 1.25fr; gap:56px; align-items:center;">
-
-    <!-- Left: RBAC screenshot full height -->
-    <div class="fl d1">
-      <div style="font-size:10px; font-weight:700; color:#991b1b; letter-spacing:1.5px; font-family:'JetBrains Mono',monospace; margin-bottom:10px;">LIVE DEMO — APPROVAL IN LARK</div>
-      <div class="ss-frame" style="box-shadow:0 24px 64px rgba(15,23,42,0.12); max-width:380px;">
-        <div class="ss-bar">
-          <div class="ss-dot" style="background:#ef4444"></div>
-          <div class="ss-dot" style="background:#f59e0b"></div>
-          <div class="ss-dot" style="background:#10b981"></div>
-          <span style="margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">Lark · RBAC Approval Flow</span>
-        </div>
-        <div class="ss-body" style="overflow:hidden;">
-          <img src="assets/ss-lark-approval.jpg" alt="RBAC Approval" style="width:100%;display:block;object-fit:cover;object-position:center 12%;height:520px;">
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: RBAC description -->
-    <div class="fr d2" style="display:flex;flex-direction:column;gap:20px;">
+      <!-- Features -->
       <div>
-        <div style="font-size:11px; font-weight:500; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;">Permission Layer</div>
-        <h2 style="font-size:40px; font-weight:700; letter-spacing:-1.5px; line-height:1.1; margin-bottom:14px;">RBAC Approvals.<br><span style="color:var(--p)">Built into the Agent.</span></h2>
-        <p style="font-size:15px; color:var(--dim); line-height:1.7;">Every action the AI agent takes can be gated behind an approval flow — routed to the right person based on role, department, or spend threshold. No one gets more access than they should.</p>
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:10px">FEATURES</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--p);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">Task-coded weekly grid</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">Hours split by SOW task code — no free-text notes sneak into billing.</div>
+          </div>
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--cyan);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">Pre-submit AI validation</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">WO active, rate match, PO balance, OT cap &amp; task codes checked before submit.</div>
+          </div>
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--amber);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">3-way compare (Submitted / Approved / Contract)</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">AI flags variance vs PO rate &amp; OT rules. Mismatch blocks invoice lock.</div>
+          </div>
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--green);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">PO burn &amp; auto-alerts</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">Real-time burn-down on every approval. Pings at 70% / 85% / 95% utilisation.</div>
+          </div>
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--blue);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">State machine + immutable audit</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">Draft → Submitted → Approved → Locked → Invoiced. Never mutate — always append.</div>
+          </div>
+          <div style="padding:13px 15px;background:var(--card);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--red);border-radius:12px">
+            <div style="font-weight:700;font-size:13px;margin-bottom:3px;color:var(--text)">Auto-generated invoices</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.55">Once a week is locked, invoice lines draft themselves from approved hours &amp; rates.</div>
+          </div>
+        </div>
+
+        <!-- Manual work savings strip -->
+        <div style="margin-top:14px;padding:16px 18px;background:var(--p-light);border:1px solid rgba(79,70,229,0.2);border-radius:14px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.8px;color:var(--p);font-family:'JetBrains Mono',monospace;margin-bottom:10px">MANUAL WORK SAVED</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+            <div>
+              <div style="font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:var(--p);letter-spacing:-0.02em">~70%</div>
+              <div style="font-size:11px;color:var(--dim);line-height:1.5">of timesheets auto-classified "safe" — 1-click approve</div>
+            </div>
+            <div>
+              <div style="font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:var(--p);letter-spacing:-0.02em">0</div>
+              <div style="font-size:11px;color:var(--dim);line-height:1.5">back-and-forth emails for PO / rate / OT mismatches</div>
+            </div>
+            <div>
+              <div style="font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:var(--p);letter-spacing:-0.02em">&lt; 2 min</div>
+              <div style="font-size:11px;color:var(--dim);line-height:1.5">from consultant hours to approved invoice draft</div>
+            </div>
+            <div>
+              <div style="font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:var(--p);letter-spacing:-0.02em">100%</div>
+              <div style="font-size:11px;color:var(--dim);line-height:1.5">audit coverage — every edit, approval &amp; lock timestamped</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="padding:14px 16px; background:var(--card); border:1px solid rgba(0,0,0,0.06); border-left:3px solid #ef4444; border-radius:12px;">
-          <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text)">Role-Based Routing</div>
-          <div style="font-size:13px; color:var(--dim); line-height:1.55;">Finance requests go to the CFO. HR requests go to the HR head. Configurable per team.</div>
-        </div>
-        <div style="padding:14px 16px; background:var(--card); border:1px solid rgba(0,0,0,0.06); border-left:3px solid var(--amber); border-radius:12px;">
-          <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text)">Threshold-Based Approvals</div>
-          <div style="font-size:13px; color:var(--dim); line-height:1.55;">Amounts above a limit auto-escalate. Below it, the agent acts immediately.</div>
-        </div>
-        <div style="padding:14px 16px; background:var(--card); border:1px solid rgba(0,0,0,0.06); border-left:3px solid var(--p); border-radius:12px;">
-          <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text)">One-tap Approve / Reject in Lark</div>
-          <div style="font-size:13px; color:var(--dim); line-height:1.55;">Approvers get a DM in Lark with full context — approve or reject without leaving the chat.</div>
-        </div>
-        <div style="padding:14px 16px; background:var(--card); border:1px solid rgba(0,0,0,0.06); border-left:3px solid var(--green); border-radius:12px;">
-          <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--text)">Full Audit Trail</div>
-          <div style="font-size:13px; color:var(--dim); line-height:1.55;">Every approval, rejection, and escalation is logged — who acted, when, and why.</div>
+      <!-- RBAC panel -->
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;color:var(--red);font-family:'JetBrains Mono',monospace;margin-bottom:10px">RBAC · CLIENT-SIDE VISIBILITY</div>
+        <div style="padding:16px 18px;background:var(--card);border:2px solid rgba(239,68,68,0.18);border-radius:14px">
+          <div style="font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px">Timesheets &amp; invoices are gated by role. Nobody sees more than they need to — configurable per client.</div>
+
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:10px;align-items:start">
+              <span class="pill p" style="font-size:10px;justify-self:start">Hiring Mgr</span>
+              <div style="font-size:12px;color:var(--text2);line-height:1.55">Sees only consultants on <em>their</em> mandate. Approves / rejects / edits weekly hours.</div>
+            </div>
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:10px;align-items:start">
+              <span class="pill a" style="font-size:10px;justify-self:start">Finance</span>
+              <div style="font-size:12px;color:var(--text2);line-height:1.55">Sees approved hours, PO burn, and invoices. Cannot approve hours. Raises / tops-up POs.</div>
+            </div>
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:10px;align-items:start">
+              <span class="pill g" style="font-size:10px;justify-self:start">Procurement</span>
+              <div style="font-size:12px;color:var(--text2);line-height:1.55">Owns MSA &amp; SOW docs, vendor onboarding, rate cards. No access to individual hours.</div>
+            </div>
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:10px;align-items:start">
+              <span class="pill c" style="font-size:10px;justify-self:start">Admin</span>
+              <div style="font-size:12px;color:var(--text2);line-height:1.55">Full visibility + audit trail. Configures who can see what; can delegate approvals.</div>
+            </div>
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;padding:10px 12px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.18);border-radius:10px;align-items:start">
+              <span class="pill" style="font-size:10px;justify-self:start;background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.25)">Vendor</span>
+              <div style="font-size:12px;color:var(--text2);line-height:1.55">Can only see <em>their own</em> submissions &amp; invoices. Zero visibility into other vendors.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(239,68,68,0.05);border:1px dashed rgba(239,68,68,0.3);border-radius:10px;font-size:11px;color:var(--text2);line-height:1.6">
+            <strong style="color:#dc2626">Default-deny</strong> — a role has no access until explicitly granted. Overrides &amp; delegations are scoped per mandate and expire automatically.
+          </div>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -1014,7 +1087,7 @@ document.addEventListener('mousemove', e => { glow.x = e.clientX; glow.y = e.cli
 
 const secs = document.querySelectorAll('section');
 const nd = document.getElementById('navDots');
-const labels = ['Title','Agenda','Personas','Job Posting','Pipeline Stages','Kanban + AI','Vendor Model','Vendor Portal','HR Pipeline','Why HRM8'];
+const labels = ['Title','Agenda','Personas','Job Posting','HR Pipeline','Vendor Pipeline','Kanban + AI','Vendor Portal','Timesheets & Invoices'];
 secs.forEach((_, i) => {
   const d = document.createElement('div');
   d.className = 'nav-dot';

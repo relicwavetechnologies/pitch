@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hrm8 ATS — Approve Timesheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: hsl(236 79% 64%);
+    --primary-hover: hsl(236 79% 60%);
+    --primary-light: hsl(236 79% 95%);
+    --accent: hsl(175 60% 50%);
+    --coral: hsl(15 85% 62%);
+    --purple: hsl(270 70% 65%);
+    --orange: hsl(25 95% 53%);
+    --teal: hsl(180 70% 45%);
+    --success: hsl(142 71% 45%);
+    --success-light: hsl(142 71% 96%);
+    --warning: hsl(38 92% 50%);
+    --warning-light: hsl(38 92% 96%);
+    --destructive: hsl(0 84% 60%);
+    --destructive-light: hsl(0 84% 96%);
+    --background: hsl(220 20% 98%);
+    --foreground: hsl(222 47% 11%);
+    --muted: hsl(220 18% 95%);
+    --muted-foreground: hsl(220 9% 46%);
+    --border: hsl(220 13% 89%);
+    --card: #ffffff;
+    --radius: 0.875rem;
+    --radius-sm: 0.625rem;
+    --radius-lg: 1.25rem;
+    --shadow-sm: 0 1px 3px 0 hsl(220 20% 10% / 0.06), 0 1px 2px -1px hsl(220 20% 10% / 0.04);
+    --shadow-primary: 0 8px 24px hsl(236 79% 64% / 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: var(--background); color: var(--foreground);
+    font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .topbar {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; align-items: center; gap: 16px;
+  }
+  .menu-btn { width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted-foreground); }
+  .breadcrumb { display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted-foreground); }
+  .breadcrumb .crumb.current { color: var(--foreground); font-weight: 600; }
+  .breadcrumb .sep { opacity: .5; }
+  .chip { padding:5px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:11px;font-weight:600;color:var(--muted-foreground);letter-spacing:.3px; }
+  .avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;letter-spacing:.5px; }
+
+  .btn { display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:all .2s ease; }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: var(--shadow-primary); }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--foreground); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-ghost { background: transparent; color: var(--muted-foreground); padding: 7px 10px; }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-success:hover { background: hsl(142 71% 40%); }
+  .btn-danger-outline { background: #fff; border: 1px solid hsl(0 84% 85%); color: var(--destructive); }
+  .btn-danger-outline:hover { background: var(--destructive-light); }
+
+  /* Layout */
+  .shell { display: grid; grid-template-columns: 1fr 380px; gap: 16px; padding: 16px 24px; height: calc(100vh - 53px); overflow: hidden; }
+  .main-col { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+  .side-col { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+
+  .card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+
+  /* Page head */
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .eyebrow { font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--coral);margin-bottom:4px; }
+  h1 { font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;letter-spacing:-0.02em; }
+  .page-sub { color: var(--muted-foreground); font-size: 12px; margin-top: 2px; }
+
+  /* KPI mini strip */
+  .kpi-mini {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  }
+  .kpi-mini .k {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 2px; position: relative; overflow: hidden;
+  }
+  .kpi-mini .lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-foreground); }
+  .kpi-mini .val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .kpi-mini .meta { font-size: 11px; color: var(--muted-foreground); }
+  .kpi-mini .k.ok .val { color: var(--success); }
+  .kpi-mini .k.warn .val { color: var(--warning); }
+  .kpi-mini .k.fail .val { color: var(--destructive); }
+  .kpi-mini .k.pri .val { color: var(--primary); }
+
+  /* Table */
+  .ts-list-card { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+  .ts-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .sec-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .sec-sub { font-size: 11px; color: var(--muted-foreground); margin-top: 1px; }
+  .filters { display: flex; gap: 6px; }
+  .filter-chip { padding: 5px 11px; border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--muted-foreground); background: var(--muted); border: 1px solid transparent; cursor: pointer; }
+  .filter-chip.active { background: var(--primary-light); color: var(--primary); }
+  .filter-chip .count { margin-left: 5px; padding: 0 6px; background: #fff; border-radius: 999px; font-size: 10px; }
+
+  .ts-table-wrap { flex: 1; overflow: auto; }
+  .ts-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
+  .ts-table th, .ts-table td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .ts-table th { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-foreground); background: var(--background); position: sticky; top: 0; }
+  .ts-table tr.selected { background: var(--primary-light); }
+  .ts-table tr:hover:not(.selected) { background: hsl(220 20% 99%); cursor: pointer; }
+
+  .cand { display: flex; align-items: center; gap: 10px; }
+  .cand .av { width: 30px; height: 30px; border-radius: 50%; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; }
+  .cand .nm { font-weight: 600; color: var(--foreground); font-size: 12px; }
+  .cand .sub { font-size: 10px; color: var(--muted-foreground); }
+
+  .vendor-chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 600; }
+
+  .risk-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: .3px; }
+  .risk-pill::before { content:'';width:5px;height:5px;border-radius:50%;background:currentColor; }
+  .risk-pill.low { background: var(--success-light); color: var(--success); }
+  .risk-pill.med { background: var(--warning-light); color: var(--warning); }
+  .risk-pill.high { background: var(--destructive-light); color: var(--destructive); }
+
+  .hours-stack { display: flex; flex-direction: column; gap: 2px; }
+  .hours-stack .main-n { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; }
+  .hours-stack .meta { font-size: 10px; color: var(--muted-foreground); font-family: 'Inter', monospace; }
+
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+  .row-actions .mini { padding: 4px 9px; border-radius: 7px; font-size: 10px; font-weight: 700; letter-spacing: .3px; cursor: pointer; border: 1px solid var(--border); background: #fff; color: var(--muted-foreground); }
+  .row-actions .mini.approve { background: var(--success-light); color: var(--success); border-color: transparent; }
+  .row-actions .mini.reject { background: var(--destructive-light); color: var(--destructive); border-color: transparent; }
+
+  /* AI compare panel */
+  .ai-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ai-badge {
+    width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--purple)); color: #fff;
+  }
+  .ai-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .ai-sub { font-size: 11px; color: var(--muted-foreground); }
+
+  .selected-banner { padding: 10px 12px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .selected-banner .av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,var(--primary),var(--purple)); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; }
+  .selected-banner .nm { font-size: 12px; font-weight: 700; }
+  .selected-banner .sub { font-size: 10px; color: var(--muted-foreground); }
+
+  /* Diff table */
+  .diff-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; margin-top: 8px; }
+  .diff-table th, .diff-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+  .diff-table th { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted-foreground); }
+  .diff-table th:first-child, .diff-table td:first-child { text-align: left; font-weight: 600; color: var(--muted-foreground); padding-left: 2px; }
+  .diff-table td.n { font-family: 'Inter', monospace; font-weight: 700; color: var(--foreground); font-size: 12px; }
+  .diff-table td.match::before { content: '✓ '; color: var(--success); font-weight: 700; }
+  .diff-table td.mismatch { color: var(--warning); }
+  .diff-table td.mismatch::before { content: '↯ '; color: var(--warning); font-weight: 700; }
+
+  .check-list { display: flex; flex-direction: column; gap: 7px; }
+  .check-item { display: grid; grid-template-columns: 18px 1fr; gap: 9px; align-items: flex-start; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--border); font-size: 11px; line-height: 1.45; }
+  .check-item.ok { border-color: hsl(142 71% 88%); background: var(--success-light); }
+  .check-item.warn { border-color: hsl(38 92% 85%); background: var(--warning-light); }
+  .check-item.fail { border-color: hsl(0 84% 88%); background: var(--destructive-light); }
+  .check-item .ic { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 10px; flex-shrink: 0; }
+  .check-item.ok .ic { background: var(--success); }
+  .check-item.warn .ic { background: var(--warning); }
+  .check-item.fail .ic { background: var(--destructive); }
+  .check-item strong { font-weight: 700; }
+  .check-item .meta { color: var(--muted-foreground); font-size: 10px; margin-top: 2px; }
+
+  .ai-verdict { margin-top: 12px; padding: 12px; border-radius: 10px; background: var(--primary-light); border: 1px dashed hsl(236 79% 80%); font-size: 11px; line-height: 1.55; }
+  .ai-verdict strong { color: var(--primary); }
+  .ai-verdict .actions { margin-top: 10px; display: flex; gap: 6px; }
+
+  @media (max-height: 780px) {
+    body { overflow: auto; }
+    .shell { height: auto; overflow: visible; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-btn" aria-label="Menu">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <nav class="breadcrumb">
+    <span class="crumb">ATS</span>
+    <span class="sep">›</span>
+    <span class="crumb">Timesheets</span>
+    <span class="sep">›</span>
+    <span class="crumb current">Approvals — Week 17</span>
+  </nav>
+  <div style="flex:1"></div>
+  <span class="chip">Acme Fintech · HR Admin</span>
+  <div class="avatar">AR</div>
+</header>
+
+<div class="shell">
+
+  <!-- ───────── MAIN ───────── -->
+  <div class="main-col">
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Timesheet Approvals</div>
+        <h1>12 timesheets need your call</h1>
+        <p class="page-sub">Week ending <strong>Sun, Apr 26, 2026</strong> · AI has pre-validated every submission against Work Order, SOW, PO and contract rate.</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-outline">Export CSV</button>
+        <button class="btn btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Approve 7 auto-safe
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI mini strip -->
+    <div class="kpi-mini">
+      <div class="k pri">
+        <div class="lbl">Pending</div>
+        <div class="val">12</div>
+        <div class="meta">across 4 vendors</div>
+      </div>
+      <div class="k ok">
+        <div class="lbl">AI auto-safe</div>
+        <div class="val">7</div>
+        <div class="meta">1-click approve</div>
+      </div>
+      <div class="k warn">
+        <div class="lbl">Needs review</div>
+        <div class="val">4</div>
+        <div class="meta">variance or OT</div>
+      </div>
+      <div class="k fail">
+        <div class="lbl">Blocked</div>
+        <div class="val">1</div>
+        <div class="meta">PO exhausted</div>
+      </div>
+    </div>
+
+    <!-- Timesheet list -->
+    <div class="card ts-list-card">
+      <div class="ts-head">
+        <div>
+          <div class="sec-title">Submitted Timesheets</div>
+          <div class="sec-sub">Submitted vs Approved vs Contract — checked by AI before it reaches your queue</div>
+        </div>
+        <div class="filters">
+          <button class="filter-chip active">All <span class="count">12</span></button>
+          <button class="filter-chip">Auto-safe <span class="count">7</span></button>
+          <button class="filter-chip">Needs review <span class="count">4</span></button>
+          <button class="filter-chip">Blocked <span class="count">1</span></button>
+        </div>
+      </div>
+
+      <div class="ts-table-wrap">
+        <table class="ts-table">
+          <thead>
+            <tr>
+              <th style="width:26%">Consultant</th>
+              <th style="width:15%">Vendor</th>
+              <th style="width:13%">Submitted vs Contract</th>
+              <th style="width:9%">Variance</th>
+              <th style="width:13%">AI Risk</th>
+              <th style="width:24%; text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="selected">
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--teal),var(--accent))">RV</div>
+                  <div>
+                    <div class="nm">Rahul Verma</div>
+                    <div class="sub">DevOps Lead · WO-2041-A</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip">◆ TechRecruit</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">49h <span style="color:var(--warning);font-size:11px;font-weight:600">· 3h OT</span></div>
+                  <div class="meta">contract: 45h + OT 1.5×</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--warning);font-family:'Inter',monospace">+3h</strong></td>
+              <td><span class="risk-pill med">Review OT</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+                <button class="mini reject">Reject</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--primary),var(--purple))">AM</div>
+                  <div>
+                    <div class="nm">Arjun Mehta</div>
+                    <div class="sub">Sr Backend · WO-2041-B</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip">◆ TechRecruit</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">40h</div>
+                  <div class="meta">matches contract</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--success);font-family:'Inter',monospace">0</strong></td>
+              <td><span class="risk-pill low">Auto-safe</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--coral),var(--orange))">PJ</div>
+                  <div>
+                    <div class="nm">Priya Jain</div>
+                    <div class="sub">Product Designer · WO-2038-A</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip" style="background:hsl(15 85% 96%);color:var(--coral)">◆ HireXpert</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">32h</div>
+                  <div class="meta">contract 40h · under</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--muted-foreground);font-family:'Inter',monospace">-8h</strong></td>
+              <td><span class="risk-pill low">Auto-safe</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--purple),var(--primary))">SM</div>
+                  <div>
+                    <div class="nm">Sneha Malhotra</div>
+                    <div class="sub">Data Scientist · WO-2051-A</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip" style="background:hsl(270 70% 96%);color:var(--purple)">◆ TopTalent</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">54h <span style="color:var(--destructive);font-size:11px;font-weight:600">· 14h OT</span></div>
+                  <div class="meta">cap 50h · 4h over cap</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--destructive);font-family:'Inter',monospace">+4h</strong></td>
+              <td><span class="risk-pill high">Over cap</span></td>
+              <td><div class="row-actions">
+                <button class="mini">Edit</button>
+                <button class="mini reject">Reject</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--orange),var(--coral))">KD</div>
+                  <div>
+                    <div class="nm">Karan Dubey</div>
+                    <div class="sub">Frontend II · WO-2058-A</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip" style="background:hsl(175 60% 94%);color:var(--teal)">◆ PrimeStaff</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">40h</div>
+                  <div class="meta">matches contract</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--success);font-family:'Inter',monospace">0</strong></td>
+              <td><span class="risk-pill low">Auto-safe</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--primary),var(--teal))">AK</div>
+                  <div>
+                    <div class="nm">Anika Khurana</div>
+                    <div class="sub">QA Lead · WO-2019-C</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip" style="background:hsl(175 60% 94%);color:var(--teal)">◆ PrimeStaff</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">42h</div>
+                  <div class="meta">PO exhausted · blocked</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--destructive);font-family:'Inter',monospace">PO 0%</strong></td>
+              <td><span class="risk-pill high">Blocked</span></td>
+              <td><div class="row-actions">
+                <button class="mini">Top-up PO</button>
+                <button class="mini reject">Reject</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--success),var(--teal))">NV</div>
+                  <div>
+                    <div class="nm">Nikhil Varma</div>
+                    <div class="sub">Backend II · WO-2041-C</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip">◆ TechRecruit</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">45h</div>
+                  <div class="meta">matches contract</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--success);font-family:'Inter',monospace">0</strong></td>
+              <td><span class="risk-pill low">Auto-safe</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+              </div></td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="cand">
+                  <div class="av" style="background:linear-gradient(135deg,var(--warning),var(--coral))">DT</div>
+                  <div>
+                    <div class="nm">Devika Tandon</div>
+                    <div class="sub">SRE · WO-2045-B</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="vendor-chip" style="background:hsl(15 85% 96%);color:var(--coral)">◆ HireXpert</span></td>
+              <td>
+                <div class="hours-stack">
+                  <div class="main-n">46h <span style="color:var(--warning);font-size:11px;font-weight:600">· 1h OT</span></div>
+                  <div class="meta">within cap, small OT</div>
+                </div>
+              </td>
+              <td><strong style="color:var(--warning);font-family:'Inter',monospace">+1h</strong></td>
+              <td><span class="risk-pill med">Review OT</span></td>
+              <td><div class="row-actions">
+                <button class="mini approve">Approve</button>
+                <button class="mini">Edit</button>
+                <button class="mini reject">Reject</button>
+              </div></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────── SIDE: AI COMPARE ───────── -->
+  <aside class="side-col">
+    <div class="card" style="padding:16px 18px;flex:1;overflow:auto">
+      <div class="ai-head">
+        <div class="ai-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+        </div>
+        <div>
+          <div class="ai-title">AI Timesheet Compare</div>
+          <div class="ai-sub">Submitted · Approved · Contract — diffed in real time</div>
+        </div>
+      </div>
+
+      <div class="selected-banner">
+        <div class="av">RV</div>
+        <div>
+          <div class="nm">Rahul Verma · TechRecruit</div>
+          <div class="sub">Week 17 · WO-2041-A</div>
+        </div>
+      </div>
+
+      <!-- Submitted vs Approved vs Contract table -->
+      <div style="padding:2px 0">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:6px">Three-way compare</div>
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Submitted</th>
+              <th>Contract</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Regular hours</td><td class="n match">46</td><td class="n">45</td><td class="n mismatch">+1</td></tr>
+            <tr><td>OT hours</td><td class="n">3</td><td class="n">≤5</td><td class="n match">ok</td></tr>
+            <tr><td>Rate</td><td class="n match">₹2,800</td><td class="n">₹2,800</td><td class="n match">—</td></tr>
+            <tr><td>Billable</td><td class="n">₹1.38L</td><td class="n">≤ ₹1.39L</td><td class="n match">ok</td></tr>
+            <tr><td>PO burn</td><td class="n">63 → 66%</td><td class="n">cap 100%</td><td class="n match">safe</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Validation checks -->
+      <div style="margin-top:14px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:6px">Contract-level checks</div>
+        <div class="check-list">
+          <div class="check-item ok">
+            <div class="ic">✓</div>
+            <div><strong>MSA &amp; SOW valid</strong><div class="meta">MSA-Acme-001 · SOW-014 runs through Sep 30.</div></div>
+          </div>
+          <div class="check-item ok">
+            <div class="ic">✓</div>
+            <div><strong>Rate matches WO</strong><div class="meta">No overrides. Rate card unchanged since Jan 2026.</div></div>
+          </div>
+          <div class="check-item warn">
+            <div class="ic">!</div>
+            <div><strong>OT 3h on Saturday</strong><div class="meta">Vendor flagged a prod incident. Requires a 1-line reason before approval.</div></div>
+          </div>
+          <div class="check-item ok">
+            <div class="ic">✓</div>
+            <div><strong>PO burn within threshold</strong><div class="meta">After approval: 66% used. Alert fires at 85%.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI verdict -->
+      <div class="ai-verdict">
+        <strong>Recommendation</strong> — approve with note. Compared against 4 prior weeks and 2 similar mandates: OT on Sat matches a real pager event logged in your incident tool. 95% confidence this is legitimate.
+        <div class="actions">
+          <button class="btn btn-success" style="font-size:11px;padding:7px 12px;flex:1;justify-content:center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve
+          </button>
+          <button class="btn btn-outline" style="font-size:11px;padding:7px 12px;flex:1;justify-content:center">Edit</button>
+          <button class="btn btn-danger-outline" style="font-size:11px;padding:7px 12px;flex:1;justify-content:center">Reject</button>
+        </div>
+      </div>
+
+      <!-- Savings meta -->
+      <div style="margin-top:14px;padding:10px 12px;border-radius:10px;background:var(--muted);font-size:11px;color:var(--muted-foreground);line-height:1.55">
+        <strong style="color:var(--foreground)">This week AI saved 2h 40m</strong> of manual review by pre-matching 7 timesheets against contract data.
+      </div>
+
+    </div>
+  </aside>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hrm8 Vendor Portal — Submit Timesheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: hsl(236 79% 64%);
+    --primary-hover: hsl(236 79% 60%);
+    --primary-light: hsl(236 79% 95%);
+    --accent: hsl(175 60% 50%);
+    --coral: hsl(15 85% 62%);
+    --purple: hsl(270 70% 65%);
+    --orange: hsl(25 95% 53%);
+    --teal: hsl(180 70% 45%);
+    --success: hsl(142 71% 45%);
+    --success-light: hsl(142 71% 96%);
+    --warning: hsl(38 92% 50%);
+    --warning-light: hsl(38 92% 96%);
+    --destructive: hsl(0 84% 60%);
+    --destructive-light: hsl(0 84% 96%);
+    --background: hsl(220 20% 98%);
+    --foreground: hsl(222 47% 11%);
+    --muted: hsl(220 18% 95%);
+    --muted-foreground: hsl(220 9% 46%);
+    --border: hsl(220 13% 89%);
+    --card: #ffffff;
+    --radius: 0.875rem;
+    --radius-sm: 0.625rem;
+    --radius-lg: 1.25rem;
+    --shadow-sm: 0 1px 3px 0 hsl(220 20% 10% / 0.06), 0 1px 2px -1px hsl(220 20% 10% / 0.04);
+    --shadow-md: 0 4px 8px -2px hsl(220 20% 10% / 0.08), 0 2px 4px -2px hsl(220 20% 10% / 0.05);
+    --shadow-primary: 0 8px 24px hsl(236 79% 64% / 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    background: var(--background); color: var(--foreground);
+    font-size: 13px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .topbar {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 10px 24px; display: flex; align-items: center; gap: 16px;
+  }
+  .menu-btn { width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted-foreground); }
+  .breadcrumb { display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted-foreground); }
+  .breadcrumb .crumb.current { color: var(--foreground); font-weight: 600; }
+  .breadcrumb .sep { opacity: .5; }
+  .chip { padding:5px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:11px;font-weight:600;color:var(--muted-foreground);letter-spacing:.3px; }
+  .avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;letter-spacing:.5px; }
+
+  .btn { display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;transition:all .2s ease; }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: var(--shadow-primary); }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+  .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--foreground); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-ghost { background: transparent; color: var(--muted-foreground); padding: 7px 10px; }
+
+  /* Layout */
+  .shell { display: grid; grid-template-columns: 1fr 340px; gap: 16px; padding: 16px 24px; height: calc(100vh - 53px); overflow: hidden; }
+  .main-col { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+  .side-col { display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+
+  .card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+  .card-pad { padding: 16px 18px; }
+
+  /* Header row */
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .eyebrow { font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--coral);margin-bottom:4px; }
+  h1 { font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;letter-spacing:-0.02em; }
+  .page-sub { color: var(--muted-foreground); font-size: 12px; margin-top: 2px; }
+
+  /* Context chip strip */
+  .ctx-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  }
+  .ctx-item { padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid var(--border); }
+  .ctx-label { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 3px; }
+  .ctx-val { font-size: 13px; font-weight: 600; color: var(--foreground); display: flex; align-items: center; gap: 6px; }
+  .ctx-val small { font-size: 11px; color: var(--muted-foreground); font-weight: 400; }
+
+  /* Consultant + week header */
+  .consultant-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--primary-light); border-radius: 12px; }
+  .consultant-row .av { width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px; }
+  .consultant-row .name { font-size:14px;font-weight:700;color:var(--foreground); }
+  .consultant-row .role { font-size:11px;color:var(--muted-foreground); }
+  .consultant-row .week-picker { margin-left:auto;display:flex;align-items:center;gap:8px;padding:7px 12px;background:#fff;border:1px solid var(--border);border-radius:10px;font-size:12px;font-weight:600; }
+
+  /* Timesheet grid */
+  .ts-grid-wrap { flex: 1; overflow: auto; }
+  .ts-grid { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .ts-grid th, .ts-grid td { padding: 12px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+  .ts-grid th { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted-foreground); background: var(--background); position: sticky; top: 0; z-index: 1; }
+  .ts-grid th:first-child, .ts-grid td:first-child { text-align: left; padding-left: 16px; }
+  .ts-grid th:last-child, .ts-grid td:last-child { text-align: right; padding-right: 16px; font-weight: 700; color: var(--primary); }
+  .ts-grid td.task-cell { text-align: left; font-size: 12px; color: var(--foreground); }
+  .ts-grid .task-name { font-weight: 600; }
+  .ts-grid .task-code { font-family: 'Inter', monospace; font-size: 10px; color: var(--muted-foreground); }
+  .hr-input {
+    width: 44px; padding: 6px 4px; text-align: center; border: 1px solid transparent;
+    background: transparent; border-radius: 6px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--foreground);
+  }
+  .hr-input:hover { background: var(--muted); }
+  .hr-input:focus { outline: none; border-color: var(--primary); background: var(--primary-light); }
+  .hr-input.ot { color: var(--warning); }
+  .hr-input.over { color: var(--destructive); }
+  .day-head { display: flex; flex-direction: column; align-items: center; }
+  .day-head .dow { font-weight: 700; color: var(--foreground); font-size: 10px; letter-spacing: 1.2px; }
+  .day-head .date { font-family: 'Inter', monospace; color: var(--muted-foreground); font-size: 10px; margin-top: 2px; }
+  .day-head.weekend .dow { color: var(--muted-foreground); }
+  .totals-row td { padding: 13px 10px; background: var(--background); font-weight: 700; color: var(--foreground); font-size: 13px; border-bottom: none; }
+  .totals-row td.task-cell { text-transform: uppercase; letter-spacing: 1.2px; font-size: 10px; color: var(--muted-foreground); }
+
+  /* Status pills */
+  .status-pill { display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:600;letter-spacing:.2px; }
+  .status-pill::before { content:'';width:5px;height:5px;border-radius:50%;background:currentColor; }
+  .status-pill.live { background: var(--success-light); color: var(--success); }
+  .status-pill.warn { background: var(--warning-light); color: var(--warning); }
+  .status-pill.fail { background: var(--destructive-light); color: var(--destructive); }
+  .status-pill.draft { background: var(--muted); color: var(--muted-foreground); }
+
+  /* AI panel */
+  .ai-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .ai-badge {
+    width: 34px; height: 34px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--purple)); color: #fff;
+  }
+  .ai-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+  .ai-sub { font-size: 11px; color: var(--muted-foreground); }
+
+  .check-list { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: flex-start;
+    padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+  }
+  .check-item.ok { border-color: hsl(142 71% 88%); background: var(--success-light); }
+  .check-item.warn { border-color: hsl(38 92% 85%); background: var(--warning-light); }
+  .check-item.fail { border-color: hsl(0 84% 88%); background: var(--destructive-light); }
+  .check-item .ic {
+    width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 11px; flex-shrink: 0;
+  }
+  .check-item.ok .ic { background: var(--success); }
+  .check-item.warn .ic { background: var(--warning); }
+  .check-item.fail .ic { background: var(--destructive); }
+  .check-item .body { font-size: 12px; color: var(--foreground); line-height: 1.45; }
+  .check-item .body strong { font-weight: 600; }
+  .check-item .body .meta { color: var(--muted-foreground); font-size: 11px; margin-top: 2px; }
+  .check-item .val { font-family: 'Inter', monospace; font-size: 11px; font-weight: 700; color: var(--foreground); }
+
+  /* PO bar */
+  .po-bar-wrap { padding: 10px 12px; border-radius: 10px; background: var(--muted); margin-top: 4px; }
+  .po-bar-head { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; }
+  .po-bar-head .lbl { color: var(--muted-foreground); font-weight: 500; }
+  .po-bar-head .amt { font-family: 'Inter', monospace; font-weight: 700; color: var(--foreground); }
+  .po-bar { height: 6px; background: #fff; border-radius: 999px; overflow: hidden; }
+  .po-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--purple)); }
+
+  /* Submit footer */
+  .submit-footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--background); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+  .submit-footer .summary { font-size: 12px; color: var(--muted-foreground); }
+  .submit-footer .summary strong { color: var(--foreground); font-weight: 700; }
+
+  /* Section titles */
+  .sec-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--foreground); letter-spacing: -0.01em; margin-bottom: 2px; }
+  .sec-sub { font-size: 11px; color: var(--muted-foreground); }
+
+  @media (max-height: 780px) {
+    body { overflow: auto; }
+    .shell { height: auto; overflow: visible; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-btn" aria-label="Menu">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <nav class="breadcrumb">
+    <span class="crumb">Vendor Portal</span>
+    <span class="sep">›</span>
+    <span class="crumb">Timesheets</span>
+    <span class="sep">›</span>
+    <span class="crumb current">Submit — Week 17</span>
+  </nav>
+  <div style="flex:1"></div>
+  <span class="chip">TechRecruit Partners</span>
+  <div class="avatar">TR</div>
+</header>
+
+<div class="shell">
+
+  <!-- ───────── MAIN COLUMN ───────── -->
+  <div class="main-col">
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Timesheet · Weekly</div>
+        <h1>Submit hours for Rahul Verma</h1>
+        <p class="page-sub">Week ending <strong>Sun, Apr 26, 2026</strong> · AI validates every row against the active Work Order, SOW and PO.</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-outline">Save draft</button>
+        <button class="btn btn-outline">Reject hours</button>
+      </div>
+    </div>
+
+    <!-- Consultant + week picker -->
+    <div class="consultant-row">
+      <div class="av">RV</div>
+      <div>
+        <div class="name">Rahul Verma <span class="status-pill live" style="margin-left:8px">Active</span></div>
+        <div class="role">DevOps Lead · Acme Fintech · Work Order WO-2041-A</div>
+      </div>
+      <div class="week-picker">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Week 17 · Apr 20 – 26
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <!-- Context strip: WO / SOW / PO / MSA -->
+    <div class="ctx-strip">
+      <div class="ctx-item">
+        <div class="ctx-label">Work Order</div>
+        <div class="ctx-val">WO-2041-A <small>· Apr 1 – Sep 30</small></div>
+      </div>
+      <div class="ctx-item">
+        <div class="ctx-label">Rate</div>
+        <div class="ctx-val">₹2,800 / hr <small>· OT 1.5×</small></div>
+      </div>
+      <div class="ctx-item">
+        <div class="ctx-label">PO Balance</div>
+        <div class="ctx-val">₹18.4L <small>/ ₹50L · 63% used</small></div>
+      </div>
+      <div class="ctx-item">
+        <div class="ctx-label">SOW / MSA</div>
+        <div class="ctx-val">SOW-014 <small>· MSA valid until Mar 2027</small></div>
+      </div>
+    </div>
+
+    <!-- Timesheet grid -->
+    <div class="card" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="sec-title">Hours by task</div>
+          <div class="sec-sub">Task codes pulled from SOW-014 · max 45 hrs/week before OT</div>
+        </div>
+        <button class="btn btn-ghost" style="font-size:11px">+ Add task</button>
+      </div>
+
+      <div class="ts-grid-wrap">
+        <table class="ts-grid">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th><div class="day-head"><div class="dow">Mon</div><div class="date">Apr 20</div></div></th>
+              <th><div class="day-head"><div class="dow">Tue</div><div class="date">Apr 21</div></div></th>
+              <th><div class="day-head"><div class="dow">Wed</div><div class="date">Apr 22</div></div></th>
+              <th><div class="day-head"><div class="dow">Thu</div><div class="date">Apr 23</div></div></th>
+              <th><div class="day-head"><div class="dow">Fri</div><div class="date">Apr 24</div></div></th>
+              <th><div class="day-head weekend"><div class="dow">Sat</div><div class="date">Apr 25</div></div></th>
+              <th><div class="day-head weekend"><div class="dow">Sun</div><div class="date">Apr 26</div></div></th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="task-cell">
+                <div class="task-name">Terraform platform migration</div>
+                <div class="task-code">TSK-IAC-014</div>
+              </td>
+              <td><input class="hr-input" value="8"></td>
+              <td><input class="hr-input" value="8"></td>
+              <td><input class="hr-input" value="7"></td>
+              <td><input class="hr-input" value="8"></td>
+              <td><input class="hr-input" value="6"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td>37</td>
+            </tr>
+            <tr>
+              <td class="task-cell">
+                <div class="task-name">K8s prod incident response</div>
+                <div class="task-code">TSK-OPS-009</div>
+              </td>
+              <td><input class="hr-input" value="0"></td>
+              <td><input class="hr-input" value="1"></td>
+              <td><input class="hr-input" value="2"></td>
+              <td><input class="hr-input" value="1"></td>
+              <td><input class="hr-input" value="2"></td>
+              <td><input class="hr-input ot" value="3"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td>9</td>
+            </tr>
+            <tr>
+              <td class="task-cell">
+                <div class="task-name">Internal review / sprint ceremonies</div>
+                <div class="task-code">TSK-ADM-002</div>
+              </td>
+              <td><input class="hr-input" value="1"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td><input class="hr-input" value="1"></td>
+              <td><input class="hr-input" value="1"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td><input class="hr-input" value="0"></td>
+              <td>3</td>
+            </tr>
+            <tr class="totals-row">
+              <td class="task-cell">Daily total</td>
+              <td>9</td>
+              <td>9</td>
+              <td>9</td>
+              <td>10</td>
+              <td>9</td>
+              <td style="color:var(--warning)">3</td>
+              <td>0</td>
+              <td style="color:var(--primary);font-size:14px">49</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="submit-footer">
+        <div class="summary">
+          <strong>49 hrs</strong> total · <strong>46 regular</strong> + <strong style="color:var(--warning)">3 OT</strong> · Billable <strong>₹1.38L</strong>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline">Preview invoice line</button>
+          <button class="btn btn-primary">
+            Submit to Acme Fintech
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────── SIDE: AI COPILOT ───────── -->
+  <aside class="side-col">
+
+    <div class="card card-pad" style="flex:1;overflow:auto">
+      <div class="ai-head">
+        <div class="ai-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 9 9l-7 1 5 5-1 7 6-3 6 3-1-7 5-5-7-1z"/></svg>
+        </div>
+        <div>
+          <div class="ai-title">Pre-Submit Validation</div>
+          <div class="ai-sub">Runs before your timesheet reaches the client</div>
+        </div>
+      </div>
+
+      <div class="check-list">
+
+        <div class="check-item ok">
+          <div class="ic">✓</div>
+          <div class="body">
+            <strong>Consultant &amp; Work Order active</strong>
+            <div class="meta">WO-2041-A runs Apr 1 – Sep 30. Week 17 is within range.</div>
+          </div>
+          <div class="val">PASS</div>
+        </div>
+
+        <div class="check-item ok">
+          <div class="ic">✓</div>
+          <div class="body">
+            <strong>Rate matches SOW rate card</strong>
+            <div class="meta">₹2,800/hr · OT multiplier 1.5×. No rate override on this WO.</div>
+          </div>
+          <div class="val">PASS</div>
+        </div>
+
+        <div class="check-item warn">
+          <div class="ic">!</div>
+          <div class="body">
+            <strong>OT window flagged — 3 hrs on Sat</strong>
+            <div class="meta">OT allowed under SOW, but exceeds your usual pattern (avg 0.6 hrs/week last 4 wks). Client may ask for justification.</div>
+          </div>
+          <div class="val">49 &gt; 45</div>
+        </div>
+
+        <div class="check-item ok">
+          <div class="ic">✓</div>
+          <div class="body">
+            <strong>PO has budget for this week</strong>
+            <div class="meta">Week will consume ₹1.38L. Remaining after submit: ₹17.02L.</div>
+            <div class="po-bar-wrap">
+              <div class="po-bar-head">
+                <span class="lbl">PO-2041 burn</span>
+                <span class="amt">₹31.6L / ₹50L</span>
+              </div>
+              <div class="po-bar"><div class="po-fill" style="width:63%"></div></div>
+            </div>
+          </div>
+          <div class="val">PASS</div>
+        </div>
+
+        <div class="check-item ok">
+          <div class="ic">✓</div>
+          <div class="body">
+            <strong>Task codes exist on SOW</strong>
+            <div class="meta">All 3 codes (TSK-IAC-014, TSK-OPS-009, TSK-ADM-002) are on the approved task list.</div>
+          </div>
+          <div class="val">3/3</div>
+        </div>
+
+        <div class="check-item ok">
+          <div class="ic">✓</div>
+          <div class="body">
+            <strong>Weekly cap respected</strong>
+            <div class="meta">Max 60 hrs/week under SOW-014. You're at 49.</div>
+          </div>
+          <div class="val">49/60</div>
+        </div>
+
+        <div style="margin-top:14px;padding:12px;border-radius:10px;background:var(--primary-light);border:1px dashed hsl(236 79% 80%);font-size:12px;color:var(--foreground);line-height:1.55">
+          <strong style="color:var(--primary)">AI verdict</strong> — safe to submit. Client will receive a pre-validated timesheet; only the OT flag needs a 1-line note from you.
+          <div style="margin-top:10px;display:flex;gap:6px">
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 10px">Add OT note</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 10px">Compare to last week</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+</body>
+</html>
